@@ -10,7 +10,7 @@ $lumineConfig = array(
 	'password' => 'lumine_test',
 	'port' => '3306',
 	'host' => 'localhost',
-	'class_path' => '/home/cairo/lumine-framework/',
+	'class_path' => '/path/to/lumine/framework/lumine-framework/',
 	'package' => 'models',
 	'options' => array(
 		//<- BEGIN -> Reverse Engineering
@@ -26,8 +26,8 @@ $lumineConfig = array(
 		'many_to_many_style' => '',
 		'create_controls' => '',
 		//<- END -> Reverse Engineering
-		'xml_validation_path' => '/home/cairo/lumine-framework/xml_validators',
-		'php_validator_path' => '/home/cairo/lumine-framework/php_validators'
+		'xml_validation_path' => '/path/to/lumine/framework/lumine-framework/xml_validators',
+		'php_validator_path' => '/path/to/lumine/framework/lumine-framework/php_validators'
 	)
 );
 
