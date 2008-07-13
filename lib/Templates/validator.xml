@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE lumine-validator SYSTEM "{dtd}">
+<lumine-validator>
+	{field}
+	<field name="{name}">
+		{validator}
+		<validator type="{type}" msg="{message}" />
+		{/validator}
+	</field>
+	{/field}
+</lumine-validator>

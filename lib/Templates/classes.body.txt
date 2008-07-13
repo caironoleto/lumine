@@ -1,0 +1,48 @@
+    // sobrecarga
+    protected $_tablename = '{tablename}';
+    protected $_package   = '{package}';
+
+    /**
+     * Inicia os valores da classe
+     * @author {author}
+     * @return void
+     */
+    protected function _initialize()
+    {
+        # nome_do_membro, nome_da_coluna, tipo, comprimento, opcoes
+        {definition}
+        $this->_addField('{name}', '{column}', '{type}', {length}, {options});
+        {/definition}
+
+        {relations}
+        $this->_addForeignRelation('{name}', self::{type}, '{class}', '{linkOn}', {table_join}, {column_join}, {lazy});
+        {/relations}
+    }
+
+    /**
+     * Recupera um objeto estaticamente
+     * @author {author}
+     * @return void
+     */
+    public static function staticGet($pk, $pkValue = null)
+    {
+        $obj = new {classname};
+        $obj->get($pk, $pkValue);
+        return $obj;
+    }
+
+	/**
+	 * chama o destrutor pai
+	 *
+	 */
+	function __destruct()
+	{
+		parent::__destruct();
+	}
+	
+    #------------------------------------------------------#
+    # Coloque todos os métodos personalizado abaixo de     #
+    # END AUTOCODE                                         #
+    #------------------------------------------------------#
+    #### END AUTOCODE
+
