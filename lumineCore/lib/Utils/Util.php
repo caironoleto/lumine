@@ -155,7 +155,7 @@ class Lumine_Util
 			}
 			$mdir = substr($mdir, 0, strlen($mdir)-1);
 			if(!file_exists($mdir) && $mdir != '') {
-				mkdir($mdir, 0777) or die("Falha ao criar o diretÛrio <strong>$mdir</strong>");
+				mkdir($mdir, 0777) or die("Falha ao criar o diret√≥rio <strong>$mdir</strong>");
 				@chmod($mdir, 0777);
 				if($dono !== false) {
 					chown($mdir, $dono);
@@ -224,7 +224,7 @@ class Lumine_Util
 				$o->$k = self::toUTF8( $v );
 			}
 		}
-		// padr„o
+		// padr√£o
 		return $o;
 	}
 
@@ -247,7 +247,7 @@ class Lumine_Util
 				$o->$k = self::fromUTF8( $v );
 			}
 		}
-		// padr„o
+		// padr√£o
 		return $o;
 	}
 	

@@ -250,7 +250,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['tables'])) {
 	{
 ?>
 		<tr>
-			<td align="right">Não foi possível conectar com "<?php echo $_POST['host']; ?>": <?php echo $message; ?> </td>
+			<td align="right">NÃ£o foi possÃ­vel conectar com "<?php echo $_POST['host']; ?>": <?php echo $message; ?> </td>
 			<td><input type="submit" name="Submit" value="Tentar novamente" /></td>
 		</tr>
 <?php
@@ -294,7 +294,7 @@ if(@$_POST['acao'] == 'Concluir' && isset($_POST['tables']) && is_array($_POST['
 			Lumine::load('Reverse');
 			$table_list = $_POST['tables'];
 			
-			// ajusta algumas configurações
+			// ajusta algumas configuraÃ§Ãµes
 			if($_POST['tipo_geracao'] == 1)	// direto na pasta
 			{
 				$_POST['generate_files'] = 1;

@@ -23,7 +23,7 @@
  * @author {author}
  * @link {link}
  *
- * Arquivo de configuração para "{database}"
+ * Arquivo de configuraÃ§Ã£o para "{database}"
  */
 
 $lumineConfig = array(

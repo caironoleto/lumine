@@ -49,7 +49,7 @@ class Lumine_Reverse_ValidatorTemplate
 		
 		if(!file_exists($modelo))
 		{
-			Lumine_Log::error('O arquivo '.$modelo.' n„o existe');
+			Lumine_Log::error('O arquivo '.$modelo.' n√£o existe');
 			exit;
 		}
 	

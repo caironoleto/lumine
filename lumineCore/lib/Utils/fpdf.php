@@ -2208,7 +2208,7 @@ function _parsepng($file)
 
 function _parsegif($file) //EDITEI - GIF support is now included
 { 
-	//Function by Jérôme Fenal
+	//Function by JÃ©rÃ´me Fenal
 	require_once(RELATIVE_PATH.'gif.php'); //GIF class in pure PHP from Yamasoft (http://www.yamasoft.com/php-gif.zip)
 
 	$h=0;

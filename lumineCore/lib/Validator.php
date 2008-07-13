@@ -5,14 +5,14 @@ Lumine::load('Validator_ClassValidator');
 Lumine::load('Validator_PHPValidator');
 
 /**
- * Classe abstrata para validação
+ * Classe abstrata para validaÃ§Ã£o
  */
 
 abstract class Lumine_Validator
 {
 
 	/**
-	 * Classe de validações registradas
+	 * Classe de validaÃ§Ãµes registradas
 	 */
 	protected static $registered_validators = array (
 		'Lumine_Validator_XMLValidator',
@@ -31,19 +31,19 @@ abstract class Lumine_Validator
 	}
 
 	/**
-	 * Efetua a validação
+	 * Efetua a validaÃ§Ã£o
 	 * @param Lumine_Base $obj Objeto a ser validado
 	 * @author Hugo Ferreira da Silva
 	 */
 	public static function validate(Lumine_Base $obj)
 	{
 		############################################################################
-		## Aqui vamos checar todos os tipos padrão de validação
+		## Aqui vamos checar todos os tipos padrÃ£o de validaÃ§Ã£o
 		## e armazenar os resultados em um array
-		## para que o objeto passe na validação, todos os retornos devem ser TRUE
-		## para isto, utilizaremos a interface de reflexão
+		## para que o objeto passe na validaÃ§Ã£o, todos os retornos devem ser TRUE
+		## para isto, utilizaremos a interface de reflexÃ£o
 		############################################################################
-		// aqui armazenamos o resultado das validações
+		// aqui armazenamos o resultado das validaÃ§Ãµes
 		$results = array();
 
 		// primeiro, carrega as classes registradas

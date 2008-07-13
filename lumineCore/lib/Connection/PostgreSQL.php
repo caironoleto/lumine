@@ -47,7 +47,7 @@ class Lumine_Connection_PostgreSQL extends Lumine_EventListener implements ILumi
 	{
 		if($this->conn_id && self::$state == self::OPEN)
 		{
-			Lumine_Log::debug( 'Utilizando conexão cacheada com '.$this->getDatabase());
+			Lumine_Log::debug( 'Utilizando conexÃ£o cacheada com '.$this->getDatabase());
 			return true;
 		}
 
@@ -78,17 +78,17 @@ class Lumine_Connection_PostgreSQL extends Lumine_EventListener implements ILumi
 					
 		if(isset($this->options['persistent']) && $this->options['persistent'] == true)
 		{
-			Lumine_Log::debug('Criando conexão persistente com '.$this->getDatabase());
+			Lumine_Log::debug('Criando conexÃ£o persistente com '.$this->getDatabase());
 			$this->conn_id = pg_pconnect($hostString);
 		} else {
-			Lumine_Log::debug('Criando conexão com '.$this->getDatabase());
+			Lumine_Log::debug('Criando conexÃ£o com '.$this->getDatabase());
 			$this->conn_id = pg_connect($hostString);
 		}
 		
 		if( !$this->conn_id )
 		{
 			self::$state = self::CLOSED;
-			$msg = 'Não foi possível conectar no banco de dados: ' . $this->getDatabase().' - '.$this->getErrorMsg();
+			$msg = 'NÃ£o foi possÃ­vel conectar no banco de dados: ' . $this->getDatabase().' - '.$this->getErrorMsg();
 			Lumine_Log::error( $msg );
 			
 			$this->dispatchEvent('onConnectionError', $this, $msg);
@@ -110,7 +110,7 @@ class Lumine_Connection_PostgreSQL extends Lumine_EventListener implements ILumi
 		if($this->conn_id && self::$state != self::CLOSED)
 		{
 			self::$state = self::CLOSED;
-			Lumine_Log::debug( 'Fechando conexão com '.$this->getDatabase());
+			Lumine_Log::debug( 'Fechando conexÃ£o com '.$this->getDatabase());
 			pg_close($this->conn_id);
 		}
 		$this->dispatchEvent('posClose', $this);
@@ -285,7 +285,7 @@ class Lumine_Connection_PostgreSQL extends Lumine_EventListener implements ILumi
 			return '';
 			
 		} 
-		throw new Lumine_Exception('A conexão não está aberta', Lumine_Exception::WARNING);
+		throw new Lumine_Exception('A conexÃ£o nÃ£o estÃ¡ aberta', Lumine_Exception::WARNING);
 	}
 	
 	public function describe($tablename)
@@ -392,7 +392,7 @@ class Lumine_Connection_PostgreSQL extends Lumine_EventListener implements ILumi
 		{
 			return pg_affected_rows($this->last_rs);
 		}
-		throw new Lumine_Exception('Conexão não está aberta', Lumine_Exception::ERRO);
+		throw new Lumine_Exception('ConexÃ£o nÃ£o estÃ¡ aberta', Lumine_Exception::ERRO);
 	}
 	
 	public function num_rows($rs)
@@ -409,7 +409,7 @@ class Lumine_Connection_PostgreSQL extends Lumine_EventListener implements ILumi
 		return self::ESCAPE_CHAR;
 	}
 	
-	// transações
+	// transaÃ§Ãµes
 	public function begin($transactionID=null)
 	{
 		$this->executeSQL("BEGIN");

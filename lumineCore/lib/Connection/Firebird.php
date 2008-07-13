@@ -27,7 +27,7 @@ class Lumine_Connection_Firebird extends Lumine_EventListener implements ILumine
     );
     
     /**
-     * conexão aberta
+     * conexÃ£o aberta
      *
      * @var resource
      */
@@ -51,44 +51,44 @@ class Lumine_Connection_Firebird extends Lumine_EventListener implements ILumine
      */
     private $password;
     /**
-     * porta de conexão com o banco
+     * porta de conexÃ£o com o banco
      *
      * @var string
      */
     private $port;
     /**
-     * host de conexão
+     * host de conexÃ£o
      *
      * @var string
      */
     private $host;
     /**
-     * opções de conexão
+     * opÃ§Ãµes de conexÃ£o
      *
      * @var array
      */
     private $options;
     /**
-     * estado atual da conexão
+     * estado atual da conexÃ£o
      *
      * @var int
      */
     private $state;
     /**
-     * referencias de transações abertas
+     * referencias de transaÃ§Ãµes abertas
      *
      * @var array
      */
     private $transactions = array();
     /**
-     * numero de transações abertas
+     * numero de transaÃ§Ãµes abertas
      *
      * @var int
      */
     private $transactions_count = 0;
     
     /**
-     * instancia da conexão
+     * instancia da conexÃ£o
      *
      * @var ILumine_Connection
      */
@@ -114,7 +114,7 @@ class Lumine_Connection_Firebird extends Lumine_EventListener implements ILumine
     }
     
     /**
-     * Efetua a conexão com o banco
+     * Efetua a conexÃ£o com o banco
      *
      * @return boolean True em caso de sucesso false em caso de falha
      */
@@ -122,7 +122,7 @@ class Lumine_Connection_Firebird extends Lumine_EventListener implements ILumine
     {
         if($this->conn_id && $this->state == self::OPEN)
         {
-            Lumine_Log::debug( 'Utilizando conexão cacheada com '.$this->getDatabase());
+            Lumine_Log::debug( 'Utilizando conexÃ£o cacheada com '.$this->getDatabase());
             return true;
         }
 
@@ -145,18 +145,18 @@ class Lumine_Connection_Firebird extends Lumine_EventListener implements ILumine
 
         if(isset($this->options['persistent']) && $this->options['persistent'] == true)
         {
-            Lumine_Log::debug( 'Criando conexão persistente com '.$this->getDatabase());
+            Lumine_Log::debug( 'Criando conexÃ£o persistente com '.$this->getDatabase());
 
             $this->conn_id = @ibase_pconnect($hostString, $this->getUser(), $this->getPassword());
         } else {
-            Lumine_Log::debug( 'Criando conexão com '.$this->getDatabase());
+            Lumine_Log::debug( 'Criando conexÃ£o com '.$this->getDatabase());
             $this->conn_id = @ibase_connect($hostString, $this->getUser(), $this->getPassword());
         }
         
         if( !$this->conn_id )
         {
             $this->state = self::CLOSED;
-            $msg = 'Não foi possível conectar no banco de dados: ' . $this->getDatabase().' - '.$this->getErrorMsg();
+            $msg = 'NÃ£o foi possÃ­vel conectar no banco de dados: ' . $this->getDatabase().' - '.$this->getErrorMsg();
             Lumine_Log::error( $msg );
             
             $this->dispatchEvent('onConnectionError', $this, $msg);
@@ -185,7 +185,7 @@ class Lumine_Connection_Firebird extends Lumine_EventListener implements ILumine
     }
     
     /**
-     * Fecha a conexão ativa com o banco
+     * Fecha a conexÃ£o ativa com o banco
      *
      */
     public function close()
@@ -194,7 +194,7 @@ class Lumine_Connection_Firebird extends Lumine_EventListener implements ILumine
         if($this->conn_id && $this->state != self::CLOSED)
         {
             $this->state = self::CLOSED;
-            Lumine_Log::debug( 'Fechando conexão com '.$this->getDatabase());
+            Lumine_Log::debug( 'Fechando conexÃ£o com '.$this->getDatabase());
             ibase_close($this->conn_id);
         }
         $this->dispatchEvent('posClose', $this);
@@ -375,7 +375,7 @@ class Lumine_Connection_Firebird extends Lumine_EventListener implements ILumine
             return '';
             
         } 
-        throw new Lumine_Exception('A conexão não está aberta', Lumine_Exception::WARNING);
+        throw new Lumine_Exception('A conexÃ£o nÃ£o estÃ¡ aberta', Lumine_Exception::WARNING);
     }
     
     public function describe($tablename)
@@ -493,7 +493,7 @@ class Lumine_Connection_Firebird extends Lumine_EventListener implements ILumine
     public function escape($str) 
     {
         /**
-         * TODO: fazer um escape decente, uma vez que o Firebird não tem um
+         * TODO: fazer um escape decente, uma vez que o Firebird nÃ£o tem um
          */
         return addslashes( $str );
         
@@ -510,7 +510,7 @@ class Lumine_Connection_Firebird extends Lumine_EventListener implements ILumine
         {
             return ibase_affected_rows($this->conn_id);
         }
-        throw new Lumine_Exception('Conexão não está aberta', Lumine_Exception::ERRO);
+        throw new Lumine_Exception('ConexÃ£o nÃ£o estÃ¡ aberta', Lumine_Exception::ERRO);
     }
     
     public function num_rows($rs)
@@ -538,7 +538,7 @@ class Lumine_Connection_Firebird extends Lumine_EventListener implements ILumine
         return self::ESCAPE_CHAR;
     }
     
-    // transações
+    // transaÃ§Ãµes
     public function begin($transactionID=null)
     {
         $id = $this->transactions_count++;
@@ -580,7 +580,7 @@ class Lumine_Connection_Firebird extends Lumine_EventListener implements ILumine
     }
     
     /**
-     * função que checa se o campo possui uma trigger que pega um contador 
+     * funÃ§Ã£o que checa se o campo possui uma trigger que pega um contador 
      *
      * @param string $tablename Nome da tabela
      * @param string $fieldname Nome do campo

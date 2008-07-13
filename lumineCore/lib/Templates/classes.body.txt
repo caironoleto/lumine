@@ -41,7 +41,7 @@
 	}
 	
     #------------------------------------------------------#
-    # Coloque todos os métodos personalizado abaixo de     #
+    # Coloque todos os mÃ©todos personalizado abaixo de     #
     # END AUTOCODE                                         #
     #------------------------------------------------------#
     #### END AUTOCODE

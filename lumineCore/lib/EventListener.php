@@ -10,7 +10,7 @@ class Lumine_EventListener
 	{
 		if( ! in_array($evt, $this->_event_types)) 
 		{
-			throw new Lumine_Exception('Tipo de evento não suportado', Lumine_Exception::ERROR);
+			throw new Lumine_Exception('Tipo de evento nÃ£o suportado', Lumine_Exception::ERROR);
 		}
 		if( ! isset($this->_listeners[ $evt ]) )
 		{
@@ -24,7 +24,7 @@ class Lumine_EventListener
 	{
 		if( ! in_array($evt, $this->_event_types)) 
 		{
-			throw new Lumine_Exception('Tipo de evento não suportado', Lumine_Exception::ERROR);
+			throw new Lumine_Exception('Tipo de evento nÃ£o suportado', Lumine_Exception::ERROR);
 		}
 		if( ! isset($this->_listeners[ $evt ]) )
 		{
@@ -38,7 +38,7 @@ class Lumine_EventListener
 	{
 		if( ! in_array($evt, $this->_event_types)) 
 		{
-			throw new Lumine_Exception('Tipo de evento não suportado', Lumine_Exception::ERROR);
+			throw new Lumine_Exception('Tipo de evento nÃ£o suportado', Lumine_Exception::ERROR);
 		}
 		$this->_listeners[ $evt ] = array();
 	}

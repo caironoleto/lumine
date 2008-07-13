@@ -46,7 +46,7 @@ class Lumine_Connection_MySQL extends Lumine_EventListener implements ILumine_Co
 	{
 		if($this->conn_id && $this->state == self::OPEN)
 		{
-			Lumine_Log::debug( 'Utilizando conexão cacheada com '.$this->getDatabase());
+			Lumine_Log::debug( 'Utilizando conexÃ£o cacheada com '.$this->getDatabase());
 			mysql_select_db($this->getDatabase(), $this->conn_id);
 			return true;
 		}
@@ -66,17 +66,17 @@ class Lumine_Connection_MySQL extends Lumine_EventListener implements ILumine_Co
 					
 		if(isset($this->options['persistent']) && $this->options['persistent'] == true)
 		{
-			Lumine_Log::debug( 'Criando conexão persistente com '.$this->getDatabase());
+			Lumine_Log::debug( 'Criando conexÃ£o persistente com '.$this->getDatabase());
 			$this->conn_id = @mysql_pconnect($hostString, $this->getUser(), $this->getPassword(), $flags);
 		} else {
-			Lumine_Log::debug( 'Criando conexão com '.$this->getDatabase());
+			Lumine_Log::debug( 'Criando conexÃ£o com '.$this->getDatabase());
 			$this->conn_id = @mysql_connect($hostString, $this->getUser(), $this->getPassword(), $flags);
 		}
 		
 		if( !$this->conn_id )
 		{
 			$this->state = self::CLOSED;
-			$msg = 'Não foi possível conectar no banco de dados: ' . $this->getDatabase().' - '.$this->getErrorMsg();
+			$msg = 'NÃ£o foi possÃ­vel conectar no banco de dados: ' . $this->getDatabase().' - '.$this->getErrorMsg();
 			Lumine_Log::error( $msg );
 			
 			$this->dispatchEvent('onConnectionError', $this, $msg);
@@ -100,7 +100,7 @@ class Lumine_Connection_MySQL extends Lumine_EventListener implements ILumine_Co
 		if($this->conn_id && $this->state != self::CLOSED)
 		{
 			$this->state = self::CLOSED;
-			Lumine_Log::debug( 'Fechando conexão com '.$this->getDatabase());
+			Lumine_Log::debug( 'Fechando conexÃ£o com '.$this->getDatabase());
 			mysql_close($this->conn_id);
 		}
 		$this->dispatchEvent('posClose', $this);
@@ -281,7 +281,7 @@ class Lumine_Connection_MySQL extends Lumine_EventListener implements ILumine_Co
 			return '';
 			
 		} 
-		throw new Lumine_Exception('A conexão não está aberta', Lumine_Exception::WARNING);
+		throw new Lumine_Exception('A conexÃ£o nÃ£o estÃ¡ aberta', Lumine_Exception::WARNING);
 	}
 	
 	public function describe($tablename)
@@ -377,7 +377,7 @@ class Lumine_Connection_MySQL extends Lumine_EventListener implements ILumine_Co
 		{
 			return mysql_affected_rows($this->conn_id);
 		}
-		throw new Lumine_Exception('Conexão não está aberta', Lumine_Exception::ERRO);
+		throw new Lumine_Exception('ConexÃ£o nÃ£o estÃ¡ aberta', Lumine_Exception::ERRO);
 	}
 	
 	public function num_rows($rs)
@@ -395,7 +395,7 @@ class Lumine_Connection_MySQL extends Lumine_EventListener implements ILumine_Co
 		return self::ESCAPE_CHAR;
 	}
 	
-	// transações
+	// transaÃ§Ãµes
 	public function begin($transactionID=null)
 	{
 		$this->executeSQL("BEGIN");

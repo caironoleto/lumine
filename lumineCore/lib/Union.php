@@ -1,13 +1,13 @@
 <?php
 /**
- * Classe respons·vel para poder realizar consultas uni„o.
+ * Classe respons√°vel para poder realizar consultas uni√£o.
  *
  * @author Hugo Ferreira da Silva
  * @package Lumine
  */
 
 /**
- * Classe respons·vel para poder realizar consultas uni„o.
+ * Classe respons√°vel para poder realizar consultas uni√£o.
  *
  * @author Hugo Ferreira da Silva
  * @link http://www.hufersil.com.br/lumine
@@ -126,7 +126,7 @@ class Lumine_Union extends Lumine_Base
 	{
 		if( empty($this->_union))
 		{
-			Lumine_Log::warning('Nenhuma classe incluida para realizar a uni„o');
+			Lumine_Log::warning('Nenhuma classe incluida para realizar a uni√£o');
 			return false;
 		}
 		

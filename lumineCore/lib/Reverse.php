@@ -90,7 +90,7 @@ class Lumine_Reverse extends Lumine_EventListener
 			}
 			if( $cfg->getOption('remove_count_chars_end'))
 			{
-				Lumine_Log::debug('Removendo os ˙ltimos '.$cfg->getOption('remove_count_chars_start') . ' caracteres de '.$table);
+				Lumine_Log::debug('Removendo os √∫ltimos '.$cfg->getOption('remove_count_chars_start') . ' caracteres de '.$table);
 				$classname = substr($classname, 0, strlen($classname) - $cfg->getOption('remove_count_chars_end'));
 			}
 			
@@ -264,7 +264,7 @@ class Lumine_Reverse extends Lumine_EventListener
 		
 		if( !is_writable($raiz))
 		{
-			Lumine_Log::error('N„o È possÌvel criar arquivos em "'.$raiz.'". Verifique as permissıes.');
+			Lumine_Log::error('N√£o √© poss√≠vel criar arquivos em "'.$raiz.'". Verifique as permiss√µes.');
 			exit;
 		}
 		
@@ -296,7 +296,7 @@ class Lumine_Reverse extends Lumine_EventListener
 		
 		$zip->addFile($this->config, 'lumine-conf.php', 'Configuration File', $this->config);
 		$zip->save();
-		// altera as permissıes do arquivo
+		// altera as permiss√µes do arquivo
 		chmod($zipname, 0777);
 		
 		Lumine_Log::debug('Arquivo ZIP gerado com sucesso em '.$zipname);
@@ -360,7 +360,7 @@ class Lumine_Reverse extends Lumine_EventListener
 				
 				Lumine_Log::debug('Arquivo para a classe '.$classname .' gerado com sucesso');
 			} else {
-				Lumine_Log::error('O PHP n„o tem direito de escrita na pasta "'.$fullpath . '". Verifique se o diretÛrio existe e se o PHP tem direito de escrita.');
+				Lumine_Log::error('O PHP n√£o tem direito de escrita na pasta "'.$fullpath . '". Verifique se o diret√≥rio existe e se o PHP tem direito de escrita.');
 				exit;
 			}
 		}
@@ -374,7 +374,7 @@ class Lumine_Reverse extends Lumine_EventListener
 			$fp = @fopen($filename, 'w');
 			if(! $fp)
 			{
-				Lumine_Log::error('O PHP n„o tem direito de escrita para gerar o arquivo "'.$filename . '". Verifique se o diretÛrio existe e se o PHP tem direito de escrita.');
+				Lumine_Log::error('O PHP n√£o tem direito de escrita para gerar o arquivo "'.$filename . '". Verifique se o diret√≥rio existe e se o PHP tem direito de escrita.');
 				exit;
 			} else {
 				fwrite($fp, $content);
@@ -383,13 +383,13 @@ class Lumine_Reverse extends Lumine_EventListener
 			}
 		}
 
-		// escreve o arquivo de configuraÁ„o
+		// escreve o arquivo de configura√ß√£o
 		$filename = $this->cfg->getProperty('class_path').DIRECTORY_SEPARATOR.'lumine-conf.php';
 		
 		$fp = @fopen($filename, 'w');
 		if(!$fp)
 		{
-			Lumine_Log::error('O PHP n„o tem direito de escrita para gerar o arquivo "'.$filename . '". Verifique se o diretÛrio existe e se o PHP tem direito de escrita.');
+			Lumine_Log::error('O PHP n√£o tem direito de escrita para gerar o arquivo "'.$filename . '". Verifique se o diret√≥rio existe e se o PHP tem direito de escrita.');
 			exit;
 		}
 		

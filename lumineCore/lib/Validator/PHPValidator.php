@@ -1,6 +1,6 @@
 <?php
 /**
-* Classe para fazer validaÁ„o em PHP
+* Classe para fazer valida√ß√£o em PHP
 * @author Cairo Lincoln de Morais Noleto
 * @link http://caironoleto.wordpress.com
 * @author Hugo Ferreira da Silva
@@ -18,19 +18,19 @@ class Lumine_Validator_PHPValidator
 	}
 	
 	/**
-	 * Objeto para manter os membros que ter„o que ser validados
+	 * Objeto para manter os membros que ter√£o que ser validados
 	 * @author Hugo Ferreira da Silva
 	 */
 	protected static $validateList = array();
 
 	/**
-	 * Adiciona um membro para a validaÁ„o
-	 * MÈtodo para adicionar os campos para validaÁ„o
-	 * @param Lumine_Base $obj Objeto que ter· um membro validado
-	 * @param $campo - Nome do campo para validaÁ„o
-	 * @param $tipoValidacao - MÈtodo de validaÁ„o
-	 * @param $message - Mensagem a ser retornada caso encontre algo inv·lido
-	 * @return boolean - Retorna verdadeiro caso validaÁ„o inserida
+	 * Adiciona um membro para a valida√ß√£o
+	 * M√©todo para adicionar os campos para valida√ß√£o
+	 * @param Lumine_Base $obj Objeto que ter√° um membro validado
+	 * @param $campo - Nome do campo para valida√ß√£o
+	 * @param $tipoValidacao - M√©todo de valida√ß√£o
+	 * @param $message - Mensagem a ser retornada caso encontre algo inv√°lido
+	 * @return boolean - Retorna verdadeiro caso valida√ß√£o inserida
 	 * @author Cairo Lincoln de Morais Noleto
 	 * @link http://caironoleto.wordpress.com
 	 * @author Hugo Ferreira da Silva
@@ -41,9 +41,9 @@ class Lumine_Validator_PHPValidator
 	}
 	
 	/**
-	 * Limpa a lista de validaÁıes de uma determinada entidade
+	 * Limpa a lista de valida√ß√µes de uma determinada entidade
 	 *
-	 * @param Lumine_Base $obj Objeto que ter· seus validators limpos
+	 * @param Lumine_Base $obj Objeto que ter√° seus validators limpos
 	 */
 	public static function clearValidations(Lumine_Base $obj)
 	{
@@ -53,8 +53,8 @@ class Lumine_Validator_PHPValidator
 	
 	/**
 	 * @param Lumine_Base $obj Objeto a ser validado
-	 * @return boolean - Retorna verdadeiro caso validaÁ„o correta
-	 * @return array - Retorna array contendo erros caso validaÁ„o invalida
+	 * @return boolean - Retorna verdadeiro caso valida√ß√£o correta
+	 * @return array - Retorna array contendo erros caso valida√ß√£o invalida
 	 * @author Cairo Lincoln de Morais Noleto
 	 * @link http://caironoleto.wordpress.com
 	 * @author Hugo Ferreira da Silva
@@ -67,7 +67,7 @@ class Lumine_Validator_PHPValidator
 		
 		foreach ($fieldList as $fieldName => $validators)
 		{
-			// se j· houver um erro para o campo atual
+			// se j√° houver um erro para o campo atual
 			if( self::checkStackError($errors, $fieldName) == true )
 			{
 				// passa para o proximo campo
@@ -75,14 +75,14 @@ class Lumine_Validator_PHPValidator
 			}
 			foreach( $validators as $array )
 			{
-				// se j· houver um erro para o campo atual
+				// se j√° houver um erro para o campo atual
 				if( self::checkStackError($errors, $fieldName) == true )
 				{
 					// passa para o proximo campo
 					break;
 				}
 				switch ($array["tipoValidacao"]) {
-					//Verifica se È String
+					//Verifica se √© String
 					case 'requiredString':
 						if ( ! is_string($obj->$array["campo"]) || (strlen($obj->$array["campo"]) == 0) )
 						{
@@ -90,7 +90,7 @@ class Lumine_Validator_PHPValidator
 						}
 						break;
 					
-					//Verifica se È Numero
+					//Verifica se √© Numero
 					case 'requiredNumber':
 						if ( ! is_numeric($obj->$array["campo"]))
 						{
@@ -117,7 +117,7 @@ class Lumine_Validator_PHPValidator
 						}
 						break;
 	
-					//Verifica se È email
+					//Verifica se √© email
 					case 'requiredEmail':
 						//Lumine_Util::validateEmail( $val );
 						$res = Lumine_Util::validateEmail( $obj->$array["campo"] );
@@ -127,7 +127,7 @@ class Lumine_Validator_PHPValidator
 						}
 						break;
 					
-					//Verifica se È uma data
+					//Verifica se √© uma data
 					case 'requiredDate':
 						$val = $obj->$array["campo"];
 						if( ! preg_match('@^(\d{2}\/\d{2}\/\d{4}|\d{4}-\d{2}\-d{2})$@', $val) )
@@ -137,7 +137,7 @@ class Lumine_Validator_PHPValidator
 						break;
 						
 					//Verifica uniquidade
-					// - AlteraÁ„o por Hugo: Aqui fiz uma mudanÁa, porque
+					// - Altera√ß√£o por Hugo: Aqui fiz uma mudan√ßa, porque
 					//   se fosse feita um update, daria erro. por isso, checamos as chaves primarias
 					case 'requiredUnique':
 						$reflection = new ReflectionClass( $obj->_getName() );
@@ -170,7 +170,7 @@ class Lumine_Validator_PHPValidator
 						unset($objeto, $reflection);
 						break;
 						
-					//Verifica uma funÁ„o
+					//Verifica uma fun√ß√£o
 					case 'requiredFunction':
 						$function = new ReflectionFunction( $array['message'] );
 						$result = $function->invoke( $obj->$fieldName );
@@ -184,7 +184,7 @@ class Lumine_Validator_PHPValidator
 						unset($function);
 						break;
 						
-					//Verifica se È CPF
+					//Verifica se √© CPF
 					case 'requiredCpf':
 						$res = ValidateCPF::execute($obj->$array["campo"]);
 						if ($res === false)
@@ -193,7 +193,7 @@ class Lumine_Validator_PHPValidator
 						}
 						break;
 						
-					//Verifica se È CNPJ
+					//Verifica se √© CNPJ
 					case 'requiredCnpj':
 						$res = ValidateCNPJ::execute($obj->$array["campo"]);
 						if ($res === false)
@@ -218,7 +218,7 @@ class Lumine_Validator_PHPValidator
 	}
 	
 	/**
-	 * MÈtodo auxiliar somente para colocar o nome do campo relacionado ao erro
+	 * M√©todo auxiliar somente para colocar o nome do campo relacionado ao erro
 	 * @param array $stack Pilha (array) de erros
 	 * @param string $field Nome do campo
 	 * @param string $value Valor a ser inserido no campo
@@ -234,12 +234,12 @@ class Lumine_Validator_PHPValidator
 	}
 	
 	/**
-	 * Verifica se j· n„o existe um erro para o campo relacionado
+	 * Verifica se j√° n√£o existe um erro para o campo relacionado
 	 * @param array $stack Pilha de erros
 	 * @param string $field Nome do campo a ser checado
 	 * @author Hugo Ferreira da Silva
 	 * @link http://www.hufersil.com.br
-	 * @return Boolean true se houver algum erro, false se n„o houver
+	 * @return Boolean true se houver algum erro, false se n√£o houver
 	 */
 	protected static function checkStackError(array &$stack, $field)
 	{

@@ -1,7 +1,7 @@
 <?php
 
 /***
- * Classe de validaÁ„o por XML
+ * Classe de valida√ß√£o por XML
  * @author Hugo Ferreira da Silva
  * @link http://www.hufersil.com.br
  **/
@@ -28,7 +28,7 @@ class Lumine_Validator_XMLValidator
 	}
 	
 	/**
-	 * Procura pelo arquivo XML para efetuar a validaÁ„o
+	 * Procura pelo arquivo XML para efetuar a valida√ß√£o
 	 * @param Lumine_Base $obj Instancia da Classe para ser validada
 	 * @author Hugo Ferreira da Silva
 	 */
@@ -36,7 +36,7 @@ class Lumine_Validator_XMLValidator
 	{
 		if(!class_exists('DomDocument'))
 		{
-			Lumine_Log::warning('Classe de validaÁ„o por XML "DomDocument" n„o definida"');
+			Lumine_Log::warning('Classe de valida√ß√£o por XML "DomDocument" n√£o definida"');
 		} else {
 			$cfg = $obj->_getConfiguration();
 
@@ -64,7 +64,7 @@ class Lumine_Validator_XMLValidator
 					$file = $filename;
 					break;
 				} else {
-					Lumine_Log::debug('Arquivo '.$filename.' n„o encontrado.');
+					Lumine_Log::debug('Arquivo '.$filename.' n√£o encontrado.');
 				}
 			}
 			
@@ -72,13 +72,13 @@ class Lumine_Validator_XMLValidator
 			{
 				$this->xml = $file;
 			} else {
-				Lumine_Log::warning('Nenhum arquivo de validaÁ„o em XML encontrado para "'.$obj->_getName().'"',__FILE__, __LINE__);
+				Lumine_Log::warning('Nenhum arquivo de valida√ß√£o em XML encontrado para "'.$obj->_getName().'"',__FILE__, __LINE__);
 			}
 		}
 	}
 	
 	/**
-	 * Efetua a validaÁ„o
+	 * Efetua a valida√ß√£o
 	 * @author Hugo Ferreira da Silva
 	 */
 	public static function validate(Lumine_Base $obj)
@@ -89,7 +89,7 @@ class Lumine_Validator_XMLValidator
 	
 	public function doValidation()
 	{
-		// n„o possui arquivo XML para validaÁ„o, sempre retorna true
+		// n√£o possui arquivo XML para valida√ß√£o, sempre retorna true
 		if( empty($this->xml) )
 		{
 			return true;
@@ -104,7 +104,7 @@ class Lumine_Validator_XMLValidator
 		
 		if( !empty($errors))
 		{
-			Lumine_Log::error('A validaÁ„o de "'.$this->obj->_getName().'" n„o pÙde ser executada por erros na formaÁ„o do XML. Analise o retorno do mÈtodo "validate" para ver os erros');
+			Lumine_Log::error('A valida√ß√£o de "'.$this->obj->_getName().'" n√£o p√¥de ser executada por erros na forma√ß√£o do XML. Analise o retorno do m√©todo "validate" para ver os erros');
 			
 			foreach($errors as $error)
 			{
@@ -113,8 +113,8 @@ class Lumine_Validator_XMLValidator
 			return false;
 		}
 		
-		// ok, o XML n„o contÈm erros
-		// vamos pegar os campos da validaÁ„o
+		// ok, o XML n√£o cont√©m erros
+		// vamos pegar os campos da valida√ß√£o
 		$xpath  = new DOMXPath( $xml );
 		$DOMFieldList = $xpath->query('//lumine-validator/field');
 		$errors = array();
@@ -134,8 +134,8 @@ class Lumine_Validator_XMLValidator
 				// para cada validator
 				foreach($DOMValidatorList as $DOMvalidator)
 				{
-					// se j· tiver validado o campo, houver outro validator
-					// e n„o passou no anterior, passa para prÛximo campo
+					// se j√° tiver validado o campo, houver outro validator
+					// e n√£o passou no anterior, passa para pr√≥ximo campo
 					if( isset($errors[ $fieldname ]) && $errors[ $fieldname ] !== true)
 					{
 						break;
@@ -172,7 +172,7 @@ class Lumine_Validator_XMLValidator
 						$maxvalue = null;
 					}
 					
-					// vÍ o tipo
+					// v√™ o tipo
 					switch($DOMvalidator->getAttribute('type'))
 					{
 						case 'requiredString':
@@ -211,7 +211,7 @@ class Lumine_Validator_XMLValidator
 			}
 		}
 		
-		// depois de todas as validaÁıes, vamos ver se deu erro em algum campo
+		// depois de todas as valida√ß√µes, vamos ver se deu erro em algum campo
 		$tudo_ok = true;
 		foreach($errors as $chave => $erro)
 		{
@@ -243,7 +243,7 @@ class Lumine_Validator_XMLValidator
 	
 	
 	#######################################################
-	# Validators padrıes
+	# Validators padr√µes
 	#######################################################
 	private function validateRequiredString( $val, $minlength, $maxlength)
 	{
@@ -308,8 +308,8 @@ class Lumine_Validator_XMLValidator
 			$pks = $tester->_getPrimaryKeys();
 			foreach($pks as $def)
 			{
-				// se uma chave n„o bater, ent„o est· tentando inserir
-				// daeh n„o pode
+				// se uma chave n√£o bater, ent√£o est√° tentando inserir
+				// daeh n√£o pode
 				if($tester->$def['name'] != $this->obj->$def['name'])
 				{
 					$pode = false;
@@ -327,7 +327,7 @@ class Lumine_Validator_XMLValidator
 	{
 		if( empty($classname))
 		{
-			Lumine_Log::warning('Classe para validaÁ„o n„o informada no XML. Use "classname" para informar o nome da classe');
+			Lumine_Log::warning('Classe para valida√ß√£o n√£o informada no XML. Use "classname" para informar o nome da classe');
 			return false;
 		}
 		$ds = DIRECTORY_SEPARATOR;
@@ -368,14 +368,14 @@ class Lumine_Validator_XMLValidator
 		
 		if( empty($use))
 		{
-			Lumine_Log::error('Classe para validaÁ„o "'.$classname.'" n„o encontrada');
+			Lumine_Log::error('Classe para valida√ß√£o "'.$classname.'" n√£o encontrada');
 			return false;
 		}
 		
 		require_once $use;
 		if( !class_exists($classdef))
 		{
-			Lumine_Log::error('DefiniÁ„o para a classe de validaÁ„o "'.$classdef.'" n„o encontrada');
+			Lumine_Log::error('Defini√ß√£o para a classe de valida√ß√£o "'.$classdef.'" n√£o encontrada');
 			return false;
 		}
 		
@@ -387,7 +387,7 @@ class Lumine_Validator_XMLValidator
 		{
 			return $tester->execute( $val );
 		} else {
-			Lumine_Log::error('MÈtodo "'.$method.'" n„o encontrado na classe "'.$classdef.'" e a classe n„o possui o mÈtodo "execute"');
+			Lumine_Log::error('M√©todo "'.$method.'" n√£o encontrado na classe "'.$classdef.'" e a classe n√£o possui o m√©todo "execute"');
 			return false;
 		}
 	}

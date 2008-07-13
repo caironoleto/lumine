@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Classe de gerenciamento de conexão com o banco de dados
+ * Classe de gerenciamento de conexÃ£o com o banco de dados
  * @author Hugo Ferreira da Silva
  * @link http://www.hufersil.com.br HUFERSIL.WEBDEVELOPER
  *
@@ -9,7 +9,7 @@
 
 class Lumine_ConnectionManager extends Lumine_EventListener
 {
-	private static $instance;
+	private static $instance = null;
 	private $connections = array();
 	
 	public static function getInstance()
@@ -33,15 +33,15 @@ class Lumine_ConnectionManager extends Lumine_EventListener
 	{
 		if( $this->getConnection($connectionName) != false )
 		{
-			Lumine_Log::warning('Já existe uma conexão com este nome: ' .$connectionName );
+			Lumine_Log::warning('JÃ¡ existe uma conexÃ£o com este nome: ' .$connectionName );
 		} else {
-			Lumine_Log::debug('Armazenando conexão: ' .$connectionName);
+			Lumine_Log::debug('Armazenando conexÃ£o: ' .$connectionName);
 			
 			$connObj = $this->getConnectionClass( $config->options['dialect'] );
 			
 			if($connObj == false)
 			{
-				Lumine_Log::error( 'Dialeto não implementado: ' .$config->options['dialect']);
+				Lumine_Log::error( 'Dialeto nÃ£o implementado: ' .$config->options['dialect']);
 				return;
 			}
 			
@@ -71,7 +71,7 @@ class Lumine_ConnectionManager extends Lumine_EventListener
 	{
 		if( ! isset($this->connections[ $connectionName ]))
 		{
-			Lumine_Log::warning('Conexão inexistente: ' .$connectionName);
+			Lumine_Log::warning('ConexÃ£o inexistente: ' .$connectionName);
 			return false;
 		}
 		return $this->connections[ $connectionName ]->getConnection();
@@ -82,7 +82,7 @@ class Lumine_ConnectionManager extends Lumine_EventListener
 		$file = LUMINE_INCLUDE_PATH . '/lib/Connection/'.$dialect.'.php';
 		if(file_exists($file) == false)
 		{
-			throw new Lumine_Exception('Tipo de conexão inexistente: ' .$connectionName, Lumine_Exception::ERROR);
+			throw new Lumine_Exception('Tipo de conexÃ£o inexistente: ' .$connectionName, Lumine_Exception::ERROR);
 		}
 		
 		$class_name = 'Lumine_Connection_' . $dialect;
@@ -96,7 +96,7 @@ class Lumine_ConnectionManager extends Lumine_EventListener
 	{
 		if( ! isset($this->connections[ $name ])) 
 		{
-			throw new Lumine_Exception('Configuração inexistente: ' .$name, Lumine_Exception::WARNING);
+			throw new Lumine_Exception('ConfiguraÃ§Ã£o inexistente: ' .$name, Lumine_Exception::WARNING);
 		}
 		
 		return $this->connections[ $name ];

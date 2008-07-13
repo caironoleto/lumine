@@ -12,44 +12,44 @@ class Lumine_Configuration extends Lumine_EventListener
 	{
 		if(empty($options['dialect']))
 		{
-			throw new Lumine_Exception("Dialeto n„o definido na configuraÁ„o", Lumine_Exception::CONFIG_NO_DIALECT);
+			throw new Lumine_Exception("Dialeto n√£o definido na configura√ß√£o", Lumine_Exception::CONFIG_NO_DIALECT);
 			return;
 		}
 		if(empty($options['database']))
 		{
-			throw new Lumine_Exception("Banco de dados n„o definido na configuraÁ„o", Lumine_Exception::CONFIG_NO_DIALECT);
+			throw new Lumine_Exception("Banco de dados n√£o definido na configura√ß√£o", Lumine_Exception::CONFIG_NO_DIALECT);
 			return;
 		}
 		if(empty($options['user']))
 		{
-			throw new Lumine_Exception("Usu·rio n„o definido na configuraÁ„o", Lumine_Exception::CONFIG_NO_DIALECT);
+			throw new Lumine_Exception("Usu√°rio n√£o definido na configura√ß√£o", Lumine_Exception::CONFIG_NO_DIALECT);
 			return;
 		}
 		if(empty($options['class_path']))
 		{
-			throw new Lumine_Exception("Class-path n„o definida na configuraÁ„o", Lumine_Exception::CONFIG_NO_DIALECT);
+			throw new Lumine_Exception("Class-path n√£o definida na configura√ß√£o", Lumine_Exception::CONFIG_NO_DIALECT);
 			return;
 		}
 		if(empty($options['package']))
 		{
-			throw new Lumine_Exception("Pacote n„o definido na configuraÁ„o", Lumine_Exception::CONFIG_NO_DIALECT);
+			throw new Lumine_Exception("Pacote n√£o definido na configura√ß√£o", Lumine_Exception::CONFIG_NO_DIALECT);
 			return;
 		}
 		
-		// opcionais, coloca valores padrıes se n„o informados
+		// opcionais, coloca valores padr√µes se n√£o informados
 		if(!isset($options['password']))
 		{
-			Lumine_Log::debug('Senha n„o definida na configuraÁ„o');
+			Lumine_Log::debug('Senha n√£o definida na configura√ß√£o');
 			$options['password'] = '';
 		}
 		if(!isset($options['port']))
 		{
-			Lumine_Log::debug('Porta n„o definido na configuraÁ„o');
+			Lumine_Log::debug('Porta n√£o definido na configura√ß√£o');
 			$options['port'] = '';
 		}
 		if(!isset($options['host']))
 		{
-			Lumine_Log::debug('Host n„o definido na configuraÁ„o');
+			Lumine_Log::debug('Host n√£o definido na configura√ß√£o');
 			$options['host'] = 'localhost';
 		}
 
@@ -84,7 +84,7 @@ class Lumine_Configuration extends Lumine_EventListener
 	{
 		if( ! isset($this->options['options'][ $name ]) ) 
 		{
-			Lumine_Log::warning('OpÁ„o inexistente: ' . $name);
+			Lumine_Log::warning('Op√ß√£o inexistente: ' . $name);
 			return null;
 		}
 		
@@ -113,7 +113,7 @@ class Lumine_Configuration extends Lumine_EventListener
 			
 			if( class_exists($className) )
 			{
-				Lumine_Log::debug('Classe j· existente: '.$className);
+				Lumine_Log::debug('Classe j√° existente: '.$className);
 			}
 			
 			if( file_exists($filename) )
@@ -122,12 +122,12 @@ class Lumine_Configuration extends Lumine_EventListener
 	
 				if( ! class_exists($className) )
 				{
-					throw new Lumine_Exception('A classe '.$className.' n„o existe no arquivo '.$filename);
+					throw new Lumine_Exception('A classe '.$className.' n√£o existe no arquivo '.$filename);
 				}
 				
 				Lumine_Log::debug('Classe carregada: '.$className);
 			} else {
-				throw new Lumine_Exception('Arquivo n„o encontrado: '.$filename, Lumine_Log::ERROR);
+				throw new Lumine_Exception('Arquivo n√£o encontrado: '.$filename, Lumine_Log::ERROR);
 			}
 		}
 	}

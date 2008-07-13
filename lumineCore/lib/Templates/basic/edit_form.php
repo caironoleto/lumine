@@ -15,7 +15,7 @@ $this->calendar_string      = '<a href="#" id="anc{name}" onclick="cal_{name}.sh
 ?>
 <script type="text/javascript">
 /**
- * Monta um calendário de eventos
+ * Monta um calendÃ¡rio de eventos
  * exibindo cores diferenciadas para dias que tem eventos
  * Feito com POO
  * @author Hugo Ferreira da Silva
@@ -65,7 +65,7 @@ CalendarioEventos.prototype = {
 		var el = CalendarioEventos.$(divname);
 		if( !el )
 		{
-			alert('DIV não encontrada: ' + divname);
+			alert('DIV nÃ£o encontrada: ' + divname);
 			return false;
 		}
 		
@@ -120,7 +120,7 @@ CalendarioEventos.prototype = {
 		var diaSemana = oDate.getDay();
 		var totalDias = this.dias[ this.mes ];
 		
-		if(this.mes == 1 && this.ano % 4 == 0)  // ano bissexto e é fevereiro
+		if(this.mes == 1 && this.ano % 4 == 0)  // ano bissexto e Ã© fevereiro
 		{
 			totalDias ++;
 		}
@@ -134,7 +134,7 @@ CalendarioEventos.prototype = {
 		oBody.appendChild( this._header() );
 		oBody.appendChild( this._cabecalhoDias() );
 		
-		// monta os dias vazios do mês (inicio do mes)
+		// monta os dias vazios do mÃªs (inicio do mes)
 		var oTr = document.createElement('TR');
 		var cell;
 		
@@ -199,8 +199,8 @@ CalendarioEventos.prototype = {
 		var tdmes = document.createElement('TD');
 		var next  = document.createElement('TD');
 		
-		prev.innerHTML = '««';
-		next.innerHTML = '»»';
+		prev.innerHTML = 'Â«Â«';
+		next.innerHTML = 'Â»Â»';
 		tdmes.innerHTML = this.meses[ this.mes ]+ ' / ' + this.ano;
 		
 		prev.className  = this.estilos.mes_anterior;
@@ -228,7 +228,7 @@ CalendarioEventos.prototype = {
 	{
 		var oTr = document.createElement('TR');
 		
-		// cabeçalho dos dias
+		// cabeÃ§alho dos dias
 		for(var i=0; i<this.cabecalho.length; i++)
 		{
 			var cell = this._getCell(null, this.estilos.domingo);
@@ -458,7 +458,7 @@ CalendarioInput.prototype = {
 }
 
 /**
- * funções auxiliares
+ * funÃ§Ãµes auxiliares
  */
 
 CalendarioEventos.$ = function( id )

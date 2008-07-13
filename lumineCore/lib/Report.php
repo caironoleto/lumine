@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Classe para geração de relatórios
+ * Classe para geraÃ§Ã£o de relatÃ³rios
  * @author Hugo Ferreira da Silva
  * @link http://www.hufersil.com.br
  *
@@ -20,7 +20,7 @@ class Lumine_Report extends Lumine_EventListener
 	);
 	
 	/**
-	 * Formatos de arquivos disponíveis
+	 * Formatos de arquivos disponÃ­veis
 	 */
 	protected $_formats = array('HTML','PDF');
 	protected $columns = array();
@@ -29,7 +29,7 @@ class Lumine_Report extends Lumine_EventListener
 
 	/**
 	 * Construtor da classe
-	 * @param Lumine_Base $obj Objeto a ser gerado o relatório
+	 * @param Lumine_Base $obj Objeto a ser gerado o relatÃ³rio
 	 * @param string $format Formato final do arquivo
 	 */
 	function __construct( Lumine_Base $obj, $format = null )
@@ -46,7 +46,7 @@ class Lumine_Report extends Lumine_EventListener
 	{
 		if( !isset($prop['name']) || !isset($prop['header']) || !isset($prop['width']) )
 		{
-			throw new Exception('Formato de coluna inválida. Você deve informar as propriedades "name","header" e "width"');
+			throw new Exception('Formato de coluna invÃ¡lida. VocÃª deve informar as propriedades "name","header" e "width"');
 		}
 		
 		$this->columns[] = $prop;
@@ -75,7 +75,7 @@ class Lumine_Report extends Lumine_EventListener
 				$this->addColumn( $column );
 			}
 		} catch(Exception $e ) {
-			Lumine_Log::warning('Formato de coluna inválido, restaurando anterior...');
+			Lumine_Log::warning('Formato de coluna invÃ¡lido, restaurando anterior...');
 			$this->columns = $old;
 		}
 	}
@@ -87,7 +87,7 @@ class Lumine_Report extends Lumine_EventListener
 	{
 		if( !in_array($fm, $this->_formats) )
 		{
-			throw new Exception('Formato não suportado: '.$fm);
+			throw new Exception('Formato nÃ£o suportado: '.$fm);
 		}
 		$this->format = $fm;
 	}

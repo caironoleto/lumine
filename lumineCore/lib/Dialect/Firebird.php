@@ -57,7 +57,7 @@ class Lumine_Dialect_Firebird extends Lumine_EventListener implements ILumine_Di
 		$cn = $this->getConnection();
 		if( $cn == null )
 		{
-			throw new Lumine_Dialect_Exception('Conexão não setada');
+			throw new Lumine_Dialect_Exception('ConexÃ£o nÃ£o setada');
 		}
 
 		$cn->connect();		
@@ -107,7 +107,7 @@ class Lumine_Dialect_Firebird extends Lumine_EventListener implements ILumine_Di
 		$cn = $this->getConnection();
 		if( empty($cn) )
 		{
-			throw new Lumine_Dialect_Exception('Conexão não setada');
+			throw new Lumine_Dialect_Exception('ConexÃ£o nÃ£o setada');
 		}
 		return $cn->affected_rows();
 	}
@@ -168,7 +168,7 @@ class Lumine_Dialect_Firebird extends Lumine_EventListener implements ILumine_Di
 	{
 		if($this->getConnection() == null)
 		{
-			throw new Lumine_Dialect_Exception('Conexão não setada');
+			throw new Lumine_Dialect_Exception('ConexÃ£o nÃ£o setada');
 		}
 		return $this->getConnection()->getErrorMsg();
 	}
@@ -216,7 +216,7 @@ class Lumine_Dialect_Firebird extends Lumine_EventListener implements ILumine_Di
 	 * Retorna o ultimo ID da tabela para campos auto-increment
 	 * @author Hugo Ferreira da Silva
 	 * @param string $campo Nome do campo da tabela de auto-increment
-	 * @return int Valor da ultima inserção
+	 * @return int Valor da ultima inserÃ§Ã£o
 	 */
 	public function getLastId( $campo )
 	{

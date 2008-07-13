@@ -56,15 +56,15 @@ class Lumine_Parser {
 	public static function parseEntityValues($obj, $str, $args = null)
 	{
 		
-		// vamos procurar por campos em que o usu·rio usou alias
+		// vamos procurar por campos em que o usu√°rio usou alias
 		// por exemplo: c.nome = ? c.idade = ?
-		// onde "c" seria o alias de Cliente, alterado com o mÈtodo $obj->setAlias( 'c' );
+		// onde "c" seria o alias de Cliente, alterado com o m√©todo $obj->setAlias( 'c' );
 		// faremos isto em cada entidade listada
 		$list = $obj->_getObjectPart('_join_list');
 		$cnn = $obj->_getConnection();
 		$idx = 0;
 		
-		// encontrar·:
+		// encontrar√°:
 		// - alias.nome_campo
 		// - {Classe.propriedade}
 		// - {propriedade}
@@ -83,8 +83,8 @@ class Lumine_Parser {
 			}
 			
 			/*
-			 * Primeiro, vamos ver se È uma clausula IN ou NOT IN
-			 * se for, vamos avaliar se o parametro passado È um ARRAY, LUMINE_BASE ou qualquer outro valor
+			 * Primeiro, vamos ver se √© uma clausula IN ou NOT IN
+			 * se for, vamos avaliar se o parametro passado √© um ARRAY, LUMINE_BASE ou qualquer outro valor
 			 */
 			$operacao = strtolower( $reg[7][$i] );
 			
@@ -106,24 +106,24 @@ class Lumine_Parser {
 						if($name == $reg[4][$i])							// informou o nome da classe
 						{
 							$field = $entity->_getField( $reg[5][$i] );		// pega o campo
-							break;											// p·ra o loop
+							break;											// p√°ra o loop
 						}
 					}
 				} else if( !empty($reg[6][$i]) ) {							// mas se informou somente o campo como {campo}
 					$entity = $obj;											// indica o objeto
 					$field = $entity->_getField( $reg[6][$i] );				// pega o campo da classe
 
-				} else {													// sei l· o que ele fez
-					continue;												// passa para o proximo e n„o faz nada
+				} else {													// sei l√° o que ele fez
+					continue;												// passa para o proximo e n√£o faz nada
 				}
 		
-				// sim, È um in ou not in
+				// sim, √© um in ou not in
 				// vamos ver o tipo de dados passado
 				
 				// se for um array
 				if( is_array($val) && !empty($val) )
 				{
-					// percorremos os itens para ver se È string ou numero
+					// percorremos os itens para ver se √© string ou numero
 					foreach( $val as $chave => $valor )
 					{
 						$valor = $cnn->escape($valor);
@@ -131,7 +131,7 @@ class Lumine_Parser {
 						$val[ $chave ] = $valor;
 					}
 
-					// agora que est· tudo certo, vamos substituir o valor
+					// agora que est√° tudo certo, vamos substituir o valor
 					$lista = implode(', ', $val);
 					//$lista = '(' . $lista . ')';
 					$str = substr_replace($str, str_replace( $reg[8][$i] , $lista, $reg[0][$i]), strpos($str, $reg[0][$i]), strlen($reg[0][$i]));
@@ -493,8 +493,8 @@ class Lumine_Parser {
 		
 		
 		// encontra por {propriedade}
-		// quando n„o especificado, significa que pertence a mesma entidade
-		// chamadora da funÁ„o, por isso n„o fazemos loop
+		// quando n√£o especificado, significa que pertence a mesma entidade
+		// chamadora da fun√ß√£o, por isso n√£o fazemos loop
 		
 		preg_match_all('@\{(\w+)\}@', $str, $reg);
 		$total = count($reg[0]);

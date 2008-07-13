@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Classe para gerar as entidades através da engenharia reversa
+ * Classe para gerar as entidades atravÃ©s da engenharia reversa
  *
  * @author Hugo Ferreira da Silva
  * @link http://www.hufersil.com.br/lumine
@@ -35,7 +35,7 @@ class Lumine_Reverse_ClassTemplate
      */
     private $package;
     /**
-     * descrição da classe (campos)
+     * descriÃ§Ã£o da classe (campos)
      *
      * @var array
      */
@@ -74,7 +74,7 @@ class Lumine_Reverse_ClassTemplate
      */
     private $author       = 'Hugo Ferreira da Silva';
     /**
-     * data de criação
+     * data de criaÃ§Ã£o
      *
      * @var unknown_type
      */
@@ -86,14 +86,14 @@ class Lumine_Reverse_ClassTemplate
      */
     private $generator    = "Lumine_Reverse";
     /**
-     * link padrão da documentação
+     * link padrÃ£o da documentaÃ§Ã£o
      *
      * @var string
      */
     private $link         = 'http://www.hufersil.com.br/lumine';
     
     /**
-     * identação dos campos
+     * identaÃ§Ã£o dos campos
      *
      * @var string
      */
@@ -106,7 +106,7 @@ class Lumine_Reverse_ClassTemplate
     private $dialect      = null;
     
     /**
-     * Utilizar ou não CamelCase nos nomes das propriedades
+     * Utilizar ou nÃ£o CamelCase nos nomes das propriedades
      *
      * @var unknown_type
      */

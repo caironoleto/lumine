@@ -3,7 +3,7 @@
 Lumine::load('Form_IForm');
 
 /**
- * Classe para gerenciar formulários dinâmicos do Lumine
+ * Classe para gerenciar formulÃ¡rios dinÃ¢micos do Lumine
  *
  * @author Hugo Ferreira da Silva
  * @package Form
@@ -15,14 +15,14 @@ class Lumine_Form_BasicForm extends Lumine_EventListener implements ILumine_Form
     private $strip_slashes;
     private $template = '/lib/Templates/basic/';
     
-    // estas variaveis deverão ser alteradas no template, conforme o gosto
-    private $autoincrement_string   = '[ Campo auto-incrementável ]';
+    // estas variaveis deverÃ£o ser alteradas no template, conforme o gosto
+    private $autoincrement_string   = '[ Campo auto-incrementÃ¡vel ]';
     private $calendar_string        = '[ Calendario ]';
 
     /**
      * Construtor
      *
-     * @param Lumine_Base $obj Objeto Lumine_Base para montar o formulário
+     * @param Lumine_Base $obj Objeto Lumine_Base para montar o formulÃ¡rio
      * @author Hugo Ferreira da Silva
      */
     function __construct(Lumine_Base $obj = null)
@@ -32,11 +32,11 @@ class Lumine_Form_BasicForm extends Lumine_EventListener implements ILumine_Form
     }
 
     /**
-     * Cria o formulário e retorna sua string
+     * Cria o formulÃ¡rio e retorna sua string
      *
-     * @param string $action Endereço para o formulário deverá ser enviado
+     * @param string $action EndereÃ§o para o formulÃ¡rio deverÃ¡ ser enviado
      * @author Hugo Ferreira da Silva
-     * @return string Formulário criado
+     * @return string FormulÃ¡rio criado
      */	
     public function createForm( $action = null )
     {
@@ -114,7 +114,7 @@ class Lumine_Form_BasicForm extends Lumine_EventListener implements ILumine_Form
                     {
                         $field .= ' checked="checked"';
                     }
-                    $field .= ' /> Não ';
+                    $field .= ' /> NÃ£o ';
                     
                     return $field;
                 break;
@@ -182,7 +182,7 @@ class Lumine_Form_BasicForm extends Lumine_EventListener implements ILumine_Form
     }
     
     /**
-     * Cria um calendário para um determinado campo
+     * Cria um calendÃ¡rio para um determinado campo
      *
      * @param string $name Nome do campo
      * @author Hugo Ferreira da Silva
@@ -194,7 +194,7 @@ class Lumine_Form_BasicForm extends Lumine_EventListener implements ILumine_Form
      }
      
      /**
-      * Exibe a lista de registros para edição
+      * Exibe a lista de registros para ediÃ§Ã£o
       */
     public function showList($offset, $limit, $formAction = null, $fieldSort = null, $order = null)
     {
@@ -303,7 +303,7 @@ class Lumine_Form_BasicForm extends Lumine_EventListener implements ILumine_Form
         $file = LUMINE_INCLUDE_PATH . $this->template . 'control.txt';
         if( !file_exists($file))
         {
-            Lumine_Log::error('O arquivo "'.$file.'" não existe!');
+            Lumine_Log::error('O arquivo "'.$file.'" nÃ£o existe!');
             exit;
         }
         
@@ -326,7 +326,7 @@ class Lumine_Form_BasicForm extends Lumine_EventListener implements ILumine_Form
     private function save( $values )
     {
         // pega a lista de chaves primarias e seus valores originais
-        // porque em alguns casos a pessoa poderá mudar as chaves primarias
+        // porque em alguns casos a pessoa poderÃ¡ mudar as chaves primarias
         $obj = $this->obj;
         $obj->reset();
         $obj->_setAlias('o');
@@ -334,7 +334,7 @@ class Lumine_Form_BasicForm extends Lumine_EventListener implements ILumine_Form
         $pk_list = $obj->_getPrimaryKeys();
         foreach($pk_list as $pk)
         {
-            // condição para atualizar
+            // condiÃ§Ã£o para atualizar
             $obj->where('o.'.$pk['name'] .' = ?', $values['_pk_' . $pk['name'] ]);
         }
         
@@ -369,7 +369,7 @@ class Lumine_Form_BasicForm extends Lumine_EventListener implements ILumine_Form
     private function delete( $values )
     {
         // pega a lista de chaves primarias e seus valores originais
-        // porque em alguns casos a pessoa poderá mudar as chaves primarias
+        // porque em alguns casos a pessoa poderÃ¡ mudar as chaves primarias
         $obj = $this->obj;
         $obj->reset();
         //$obj->_setAlias('o');
@@ -377,7 +377,7 @@ class Lumine_Form_BasicForm extends Lumine_EventListener implements ILumine_Form
         $pk_list = $obj->_getPrimaryKeys();
         foreach($pk_list as $pk)
         {
-            // condição para atualizar
+            // condiÃ§Ã£o para atualizar
             $obj->where('{'.$pk['name'] .'} = ?', $values['_pk_' . $pk['name'] ]);
         }
 

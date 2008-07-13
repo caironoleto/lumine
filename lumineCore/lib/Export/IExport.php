@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Interface para exportação de schema (criar as tabelas no banco)
+ * Interface para exportaÃ§Ã£o de schema (criar as tabelas no banco)
  * @author Hugo Ferreira da Silva
  * @link http://www.hufersil.com.br
  */
@@ -28,7 +28,7 @@ abstract class ILumine_Export {
 	}
 	
 	/**
-	 * Efetua a criação das tabelas no banco
+	 * Efetua a criaÃ§Ã£o das tabelas no banco
 	 * Deve ser especializado pela sub-classe
 	 * @author Hugo Ferreira da Silva
 	 * @link http://www.hufersil.com.br
@@ -39,7 +39,7 @@ abstract class ILumine_Export {
 	}
 
 	/**
-	 * Recupera as definições de tabelas a serem criadas
+	 * Recupera as definiÃ§Ãµes de tabelas a serem criadas
 	 * Deve ser especializado pela sub-classe
 	 * @author Hugo Ferreira da Silva
 	 * @link http://www.hufersil.com.br
@@ -61,7 +61,7 @@ abstract class ILumine_Export {
 	}
 	
 	/**
-	 * Carrega a lista de arquivos e classes instanciadas da configuração indicada
+	 * Carrega a lista de arquivos e classes instanciadas da configuraÃ§Ã£o indicada
 	 * @author Hugo Ferreira da Silva
 	 * @link http://www.hufersil.com.br
 	 * @return void
@@ -111,7 +111,7 @@ abstract class ILumine_Export {
 	}
 
 	/**
-	 * Este método só recupera as referencias de chaves estrangeiras, quem vai gerar é o método especializado create
+	 * Este mÃ©todo sÃ³ recupera as referencias de chaves estrangeiras, quem vai gerar Ã© o mÃ©todo especializado create
 	 * @author Hugo Ferreira da Silva
 	 * @link http://www.hufersil.com.br
 	 * @return void

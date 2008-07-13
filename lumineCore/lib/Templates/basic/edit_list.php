@@ -9,7 +9,7 @@ $pks_list = $this->obj->_getPrimaryKeys();
 	<tr>
 <?php
 
-// definiÁ„o para filtros
+// defini√ß√£o para filtros
 	foreach($def as $name => $item)
 	{
 ?>
@@ -21,7 +21,7 @@ $pks_list = $this->obj->_getPrimaryKeys();
     <tr>
 <?php
 
-// definiÁ„o para os labels dos campos
+// defini√ß√£o para os labels dos campos
 	foreach($def as $item)
 	{
 ?>
@@ -87,7 +87,7 @@ $step  = 10;
 
 for($i=$min; $i<=$max; $i += $step)
 {
-	printf('<option value="%d"%s>Mostrar %s registros por p·gina</option>'.PHP_EOL, $i, $i==$limit ? ' selected':'', $i);
+	printf('<option value="%d"%s>Mostrar %s registros por p√°gina</option>'.PHP_EOL, $i, $i==$limit ? ' selected':'', $i);
 }
 
 ?>
@@ -110,7 +110,7 @@ for($i=0; $i<$paginas; $i++)
 		$lnk .= $k .'=' .$v. '&';
 	}
 	$lnk .= 'offset=' . ($i * $limit);
-	printf('<option value="%s"%s>%s</option>', $lnk, $offset == $i * $limit ? ' selected' : '', 'P·gina ' . ($i + 1) .' de '. $paginas);
+	printf('<option value="%s"%s>%s</option>', $lnk, $offset == $i * $limit ? ' selected' : '', 'P√°gina ' . ($i + 1) .' de '. $paginas);
 }
 
 ?>

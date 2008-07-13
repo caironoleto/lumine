@@ -55,7 +55,7 @@ class Lumine_Dialect_MySQL extends Lumine_EventListener implements ILumine_Diale
 		$cn = $this->getConnection();
 		if( $cn == null )
 		{
-			throw new Lumine_Dialect_Exception('Conexão não setada');
+			throw new Lumine_Dialect_Exception('ConexÃ£o nÃ£o setada');
 		}
 
 		$cn->connect();		
@@ -120,7 +120,7 @@ class Lumine_Dialect_MySQL extends Lumine_EventListener implements ILumine_Diale
 		$cn = $this->getConnection();
 		if( empty($cn) )
 		{
-			throw new Lumine_Dialect_Exception('Conexão não setada');
+			throw new Lumine_Dialect_Exception('ConexÃ£o nÃ£o setada');
 		}
 		return $cn->affected_rows();
 	}
@@ -157,7 +157,7 @@ class Lumine_Dialect_MySQL extends Lumine_EventListener implements ILumine_Diale
 	 * retorna uma determinada linha
 	 *
 	 * @param int $rowNumber numero da linha
-	 * @return array|boolean False se não houver a determinada linha, array de dados se encontrar
+	 * @return array|boolean False se nÃ£o houver a determinada linha, array de dados se encontrar
 	 */
 	public function fetch_row($rowNumber)
 	{
@@ -183,7 +183,7 @@ class Lumine_Dialect_MySQL extends Lumine_EventListener implements ILumine_Diale
 	/**
 	 * passa para o proximo registro
 	 *
-	 * @return array|boolean array se encontrar, false se não houver mais
+	 * @return array|boolean array se encontrar, false se nÃ£o houver mais
 	 */
 	public function fetch()
 	{
@@ -211,7 +211,7 @@ class Lumine_Dialect_MySQL extends Lumine_EventListener implements ILumine_Diale
 	{
 		if($this->getConnection() == null)
 		{
-			throw new Lumine_Dialect_Exception('Conexão não setada');
+			throw new Lumine_Dialect_Exception('ConexÃ£o nÃ£o setada');
 		}
 		return $this->getConnection()->getErrorMsg();
 	}
@@ -264,7 +264,7 @@ class Lumine_Dialect_MySQL extends Lumine_EventListener implements ILumine_Diale
 	 * Retorna o ultimo ID da tabela para campos auto-increment
 	 * @author Hugo Ferreira da Silva
 	 * @param string $campo Nome do campo da tabela de auto-increment
-	 * @return int Valor da ultima inserção
+	 * @return int Valor da ultima inserÃ§Ã£o
 	 */
 	public function getLastId( $campo )
 	{

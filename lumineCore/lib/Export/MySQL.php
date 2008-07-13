@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Interface para exportação de schema (criar as tabelas no banco)
+ * Interface para exportaÃ§Ã£o de schema (criar as tabelas no banco)
  * @author Hugo Ferreira da Silva
  * @link http://www.hufersil.com.br
  */
@@ -11,7 +11,7 @@ Lumine::load('Export_IExport');
 class Lumine_Export_MySQL extends ILumine_Export {
 
 	/**
-	 * Método especializado que irá realizar a criação das tabelas no banco
+	 * MÃ©todo especializado que irÃ¡ realizar a criaÃ§Ã£o das tabelas no banco
 	 * @author Hugo Ferreira da Silva
 	 * @link http://www.hufersil.com.br
 	 */
@@ -26,7 +26,7 @@ class Lumine_Export_MySQL extends ILumine_Export {
 		
 		$sqlList = array_merge( $this->tables, $this->indexes );
 		
-		// para cada chave estrangeira, criaremos o SQL de geração do Foreign Key
+		// para cada chave estrangeira, criaremos o SQL de geraÃ§Ã£o do Foreign Key
 		reset($this->foreignKeys);
 		foreach($this->foreignKeys as $fk)
 		{
@@ -36,8 +36,8 @@ class Lumine_Export_MySQL extends ILumine_Export {
 		
 		$sqlList = array_merge($sqlList, $this->foreignKeysSQL);
 		
-		// ok, agora que temos as definições de tabela, vamos criá-las no banco
-		// é só executar uma a uma
+		// ok, agora que temos as definiÃ§Ãµes de tabela, vamos criÃ¡-las no banco
+		// Ã© sÃ³ executar uma a uma
 		foreach( $sqlList as $sql )
 		{
 			Lumine_Log::debug('Executando a SQL: '. $sql);
@@ -47,7 +47,7 @@ class Lumine_Export_MySQL extends ILumine_Export {
 	}
 	
 	/**
-	 * Cria as definições (DLL) das tabelas (CREATE TABLE)
+	 * Cria as definiÃ§Ãµes (DLL) das tabelas (CREATE TABLE)
 	 * @author Hugo Ferreira da Silva
 	 * @link http://www.hufersil.com.br
 	 */
@@ -57,7 +57,7 @@ class Lumine_Export_MySQL extends ILumine_Export {
 		
 		$this->tables[] = 'SET FOREIGN_KEY_CHECKS=0';
 		
-		// criação das tabelas normais
+		// criaÃ§Ã£o das tabelas normais
 		$mtm = array();
 		foreach( $this->classList as $obj )
 		{
@@ -75,7 +75,7 @@ class Lumine_Export_MySQL extends ILumine_Export {
 			$tabledef = substr(trim($tabledef), 0, -1) . ') TYPE=InnoDB';
 			$this->tables[] = $tabledef;
 			
-			// vamos olhar agora as definições M-T-M
+			// vamos olhar agora as definiÃ§Ãµes M-T-M
 			$relations = $obj->_getForeignRelations();
 			foreach( $relations as $relation )
 			{
@@ -108,7 +108,7 @@ class Lumine_Export_MySQL extends ILumine_Export {
 						}
 					}
 					
-					// coloca a definição da tabela mtm no array
+					// coloca a definiÃ§Ã£o da tabela mtm no array
 					$this->tables[] = $tabledef;
 					
 					// agora, vamos criar as chaves estrangeiras
@@ -183,7 +183,7 @@ class Lumine_Export_MySQL extends ILumine_Export {
 	}
 	
 	/**
-	 * Cria os comandos SQL para gerar os índices
+	 * Cria os comandos SQL para gerar os Ã­ndices
 	 * @author Hugo Ferreira da Silva
 	 * @link http://www.hufersil.com.br
 	 * @return void

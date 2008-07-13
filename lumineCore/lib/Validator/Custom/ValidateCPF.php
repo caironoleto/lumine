@@ -7,16 +7,16 @@ class ValidateCPF
 		/******************************
 		Calculando o primeiro digito
 		******************************/
-		$cpf = preg_replace('@\D@','', $cpf);				// remove caracteres que n„o s„o n˙meros
+		$cpf = preg_replace('@\D@','', $cpf);				// remove caracteres que n√£o s√£o n√∫meros
 
 		if(strlen($cpf) != 11)								// se for diferente de 11 caracteres
 		{
-			return false;									// inv·lido
+			return false;									// inv√°lido
 		}
 		
 		if(preg_match('@(\d{1})\1{10}@', $cpf))				// se a pessoa digitiou 11 numeros iguais
 		{
-			return false;									// inv·lido
+			return false;									// inv√°lido
 		}
 		
 		$dv_informado  = substr($cpf, 9,2);					// pega o digido verificador informado
@@ -31,7 +31,7 @@ class ValidateCPF
 			$multiplicador --;								// diminui o valor do multiplicador
 		}
 		
-		$dv1_encontrado = $soma % 11;						// pega o resto da divis„o por 11 para saber o primeiro DV
+		$dv1_encontrado = $soma % 11;						// pega o resto da divis√£o por 11 para saber o primeiro DV
 		if($dv1_encontrado < 2)								// se o DV encontrado for 1 ou 0 (ou seja, menor que 2)
 		{
 			$dv1_encontrado = 0;							// coloca o valor como 0
@@ -53,7 +53,7 @@ class ValidateCPF
 		}
 
 
-		$dv2_encontrado = $soma % 11;						// pega o resto da divis„o por 11 para saber o primeiro DV
+		$dv2_encontrado = $soma % 11;						// pega o resto da divis√£o por 11 para saber o primeiro DV
 		if($dv2_encontrado < 2)								// se o DV encontrado for 1 ou 0 (ou seja, menor que 2)
 		{
 			$dv2_encontrado = 0;							// coloca o valor como 0
@@ -63,12 +63,12 @@ class ValidateCPF
 		
 		$dv_final = $dv1_encontrado. $dv2_encontrado;		// monta o DV encontrado no calcula
 		
-		if($dv_final != $dv_informado)						// se o DV informado È diferente do encontrado no calculo
+		if($dv_final != $dv_informado)						// se o DV informado √© diferente do encontrado no calculo
 		{
-			return false;									// CPF inv·lido
+			return false;									// CPF inv√°lido
 		}
 		
-		// se chegou atÈ aqui, È porque È valido, EBA!
+		// se chegou at√© aqui, √© porque √© valido, EBA!
 		return true;
 	}
 }

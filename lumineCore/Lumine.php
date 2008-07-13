@@ -1,7 +1,7 @@
 <?php
  
 /**
- * Define o diretório absoluto de onde Lumine se encontra
+ * Define o diretÃ³rio absoluto de onde Lumine se encontra
  */
 define('LUMINE_INCLUDE_PATH', dirname(__FILE__));
 
@@ -59,11 +59,11 @@ abstract class Lumine
 	}
 	
 	/**
-	 * Checa se um valor é realmente nulo
+	 * Checa se um valor Ã© realmente nulo
 	 *
 	 * @param mixed $val Valor a ser comparado
 	 * @author Hugo Ferreira da Silva
-	 * @return boolean True se for nulo, do contrário false
+	 * @return boolean True se for nulo, do contrÃ¡rio false
 	 */
 	public static function is_empty($val)
 	{
@@ -71,7 +71,7 @@ abstract class Lumine
 	}
 }
 
-// carrega principais dependências
+// carrega principais dependÃªncias
 Lumine::load('Exception','EventListener','Tokenizer','Parser','Exception','Configuration','ConnectionManager','Base','Validator','Union');
 Lumine::load('Utils_Util','Utils_Crypt');
 

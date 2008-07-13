@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Esta classe irá procurar todos os métodos que inicia com validate no objeto principal
+ * Esta classe irÃ¡ procurar todos os mÃ©todos que inicia com validate no objeto principal
  */
 
 class Lumine_Validator_ClassValidator
 {
 
 	/**
-	 * Efetua a validação
+	 * Efetua a validaÃ§Ã£o
 	 */
 	public static function validate(Lumine_Base $obj)
 	{
