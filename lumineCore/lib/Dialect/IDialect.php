@@ -3,8 +3,7 @@
 interface ILumine_Dialect
 {
 
-	function __construct(Lumine_Base $obj = null);
-	public function setConnection($cnn);
+	function __construct($fetchMode);
 	public function getConnection();
 	public function setFetchMode($mode);
 	public function getFetchMode();

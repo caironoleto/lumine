@@ -104,6 +104,10 @@ class Lumine_Log {
 		$line = $bt['line'];
 		self::log(self::ERROR, $message, $file, $line);
 	}
+	
+	public static function memoryUsage($real_usage = true) {
+		return memory_get_usage()/1048576 . ' MB';
+	}
 }
 
 

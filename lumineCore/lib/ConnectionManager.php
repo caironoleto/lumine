@@ -114,8 +114,4 @@ class Lumine_ConnectionManager extends Lumine_EventListener
 	    parent::__destruct();
 	}
 }
-
-
-
-
 ?>

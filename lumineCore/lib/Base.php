@@ -44,10 +44,6 @@ class Lumine_Base extends Lumine_EventListener
 	protected static $state;
 
     /**
-     * Armazena as configuraÃ§Ãµes
-     */
-	protected $_config;
-    /**
      * DefiniÃ§Ã£o do objeto
      */
 	protected $_definition     = array();
@@ -167,32 +163,35 @@ class Lumine_Base extends Lumine_EventListener
 	 * deverÃ¡ chamar este para que funcione corretamente.
 	 * @author Hugo Ferreira da Silva
      */
+     
+     protected static $package;
+     
 	function __construct()
 	{
 		if($this->_package == null || $this->_tablename == null)
 		{
-			throw new Lumine_Exception('VocÃª nÃ£o pode acessar esta classe diretamente.', Lumine_Excetpion::ERROR);
+			throw new Lumine_Exception('Você não pode acessar esta classe diretamente.', Lumine_Excetpion::ERROR);
 		}
+		self::$package = $this->_package;
 		
 		$dialect = $this->_getConfiguration()->getProperty('dialect');
 		$class_dialect = 'Lumine_Dialect_' . $dialect;
-		
+
 		Lumine::load($class_dialect);
-		
+
 		if( ! class_exists($class_dialect) )
 		{
-			throw new Lumine_Exception('Dialeto nÃ£o encontrado: '.$class_dialect, Lumine_Exception::ERROR);
+			throw new Lumine_Exception('Dialeto não encontrado: '.$class_dialect, Lumine_Exception::ERROR);
 		}
-		
+
 		$this->_initialize();
 		$this->_join_list[] = $this;
 		$this->_from[]      = $this;
-		$this->_bridge      = new $class_dialect( $this );
-
+		$this->_bridge      = new $class_dialect($this->fetchMode());
 		// varre as chaves primarias em busca de classes pais
 		$this->_joinSubClasses( $this );
 	}
-	
+
 	/**
 	 * destroi a classe
 	 *
@@ -1403,32 +1402,19 @@ class Lumine_Base extends Lumine_EventListener
 	}
 
      /**
-      * Recupera o objeto de configuraÃ§Ã£o atual
+      * Recupera o objeto de configuração atual
       *
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return Lumine_Configuration Objeto de configuraÃ§Ã£o atual
+      * @return Lumine_Configuration Objeto de configuração atual
       */	
-	public function _getConfiguration()
+	public static function _getConfiguration()
 	{
-		$cm = Lumine_ConnectionManager::getInstance();
-		return $cm->getConfiguration($this->_package);
+		return Lumine_ConnectionManager::getInstance()->getConfiguration(self::$package);
 	}
 	
      /**
-      * Altera o objeto de conexÃ£o com o banco utilizado
-      *
-      * @param ILumine_Connection $cn Novo objeto de conexÃ£o
-      * @author Hugo Ferreira da Silva
-      * @link http://www.hufersil.com.br/lumine
-      */
-	public function _setConnection(ILumine_Connection $cn )
-	{
-		$this->_config->setConnection($cn);
-	}
-	
-     /**
-      * Recupera a conexÃ£o atual
+      * Recupera a conexão atual
       *
       * <code>
       * </code>
@@ -1436,9 +1422,9 @@ class Lumine_Base extends Lumine_EventListener
       * @link http://www.hufersil.com.br/lumine
       * @return ILumine_Connection Objeto de conexÃ£o com o banco atual
       */
-	public function _getConnection()
+	public static function _getConnection()
 	{
-		return $this->_getConfiguration()->getConnection();
+		return self::_getConfiguration()->getConnection();
 	}
 
      /**

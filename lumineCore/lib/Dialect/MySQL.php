@@ -8,26 +8,18 @@ class Lumine_Dialect_MySQL extends Lumine_EventListener implements ILumine_Diale
 
 	private $connection = null;
 	private $result_set = null;
-	private $obj        = null;
 	private $dataset    = array();
 	private $pointer    = 0;
 	private $fetchMode  = '';
 
-	function __construct(Lumine_Base $obj = null)
+	function __construct($fetchMode)
 	{
-		//$this->obj = $obj;
-		$this->setConnection( $obj->_getConnection() );
-		$this->setFetchMode( $obj->fetchMode() );
-	}
-
-	public function setConnection($cnn)
-	{
-		$this->connection = $cnn;
+		$this->setFetchMode($fetchMode);
 	}
 
 	public function getConnection()
 	{
-		return $this->connection;
+		return Lumine_Base::_getConnection();
 	}
 	
 	public function getFetchMode()
@@ -59,8 +51,6 @@ class Lumine_Dialect_MySQL extends Lumine_EventListener implements ILumine_Diale
 		}
 
 		$cn->connect();		
-		$this->setConnection($cn);
-		
 		try
 		{
 			Lumine_Log::debug( 'Executando consulta: ' . $sql);
@@ -283,13 +273,10 @@ class Lumine_Dialect_MySQL extends Lumine_EventListener implements ILumine_Diale
 	}
 	
 	function __destruct()
-	{
-		$this->connection = null;
-		$this->result_set = null;
+	{		$this->result_set = null;
 		$this->obj = null;
 		$this->dataset    = array();
 		$this->pointer    = 0;
-		
 		parent::__destruct();
 	}
 }

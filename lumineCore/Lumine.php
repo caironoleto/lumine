@@ -1,5 +1,4 @@
 <?php
- 
 /**
  * Define o diretório absoluto de onde Lumine se encontra
  */
