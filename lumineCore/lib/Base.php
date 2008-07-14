@@ -1560,7 +1560,7 @@ class Lumine_Base extends Lumine_EventListener
 					{
 						$new_obj = new $field['class'];
 						$new_obj->_setFrom($obj->toArray());
-						$list[] = $new_obj;
+						$list[] = clone $new_obj;
 						$new_obj->destroy();
 						unset($new_obj);
 					}
@@ -1624,7 +1624,7 @@ class Lumine_Base extends Lumine_EventListener
 					{
 						$dummy = new $field['class'];
 						$dummy->_setFrom($list->toArray());
-						$listObj[] = $dummy;
+						$listObj[] = clone $dummy;
 						$dummy->destroy();
 						unset($dummy);
 					}
@@ -1645,7 +1645,7 @@ class Lumine_Base extends Lumine_EventListener
 					{
 						$obj->$field['options']['linkOn'] = $this->$linkName;
 						$obj->find( true );
-						$this->$linkName = $obj;
+						$this->$linkName = clone $obj;
 						
 					}
 					$obj->destroy();
@@ -1679,8 +1679,7 @@ class Lumine_Base extends Lumine_EventListener
 		
 		while($this->fetch())
 		{
-			$row = $this->toArray('%s', $returnRealValues);
-			$nova[] = $row;
+			$nova[] = $this->toArray('%s', $returnRealValues);
 		}
 		
 		
@@ -1702,31 +1701,33 @@ class Lumine_Base extends Lumine_EventListener
 	public function toArray( $format = '%s', $returnRealValues = false) {
 		$list = array();
 
-		
-		foreach($this->_dataholder as $key => $val) {
-			$newkey = sprintf($format, $key);
-			
-			$fld = $this->_getFieldByColumn( $key );
-			if( !empty($fld)) {
-				$key = $fld['name'];
-			}
-			
-			if( $returnRealValues == true ) {
-				$val = $this->fieldValue( $key );
-			} else {
-				$val = $this->$key;
-			}
-			
-			if(is_a($val, self::BASE_CLASS)) {
-				$list[ $newkey ] = $val->toArray( $format );
-			} else {
-				if(is_array($val)) {
-					foreach($val as $k => $v) {
-						$nk = sprintf($format, $k);
-						if(is_a($v, self::BASE_CLASS)) {
-							$list2[ $nk ] = $v->toArray( $format );
-						} else {
-							$list2[ $nk ] = $v;
+		if (count($this->_dataholder) > 0 ) { 
+			foreach($this->_dataholder as $key => $val) {
+				$newkey = sprintf($format, $key);
+				
+				$fld = $this->_getFieldByColumn( $key );
+	
+				if( !empty($fld)) {
+					$key = $fld['name'];
+				}
+				
+				if( $returnRealValues == true ) {
+					$val = $this->fieldValue( $key );
+				} else {
+					$val = $this->$key;
+				}
+				
+				if(is_a($val, self::BASE_CLASS)) {
+					$list[ $newkey ] = $val->toArray( $format );
+				} else {
+					if(is_array($val)) {
+						foreach($val as $k => $v) {
+							$nk = sprintf($format, $k);
+							if(is_a($v, self::BASE_CLASS)) {
+								$list2[ $nk ] = $v->toArray( $format );
+							} else {
+								$list2[ $nk ] = $v;
+							}
 						}
 					}
 					$list[$newkey] = $list2;
