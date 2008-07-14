@@ -1443,7 +1443,7 @@ class Lumine_Base extends Lumine_EventListener
 				return $this->_getMultiInsertSQL( $opt );
 		}
 		
-		throw new Lumine_Exception('Tipo nÃ£o suportado: '.$type, Lumine_Exception::ERROR);
+		throw new Lumine_Exception('Tipo não suportado: '.$type, Lumine_Exception::ERROR);
 	}
 
      /**
@@ -2700,12 +2700,11 @@ class Lumine_Base extends Lumine_EventListener
 							// atualiza
 							$obj->save();
 						}
-						
 						// coloca o valor no campo apropriado da classe chamadora
 						$this->$name = $obj->$prop['options']['linkOn'];
-
+						
 					} else { // se nÃ£o tiver um valor
-						Lumine_Log::debug('Valor nÃ£o encontrado para: "' . $obj->_getName(). '" com o nome de campo ' . $name . '-> '.$chave);
+						Lumine_Log::debug('Valor não encontrado para: "' . $obj->_getName(). '" com o nome de campo ' . $name . '-> '.$chave);
 
 						$list = $this->toArray();
 						foreach( $list as $chave => $valor )
@@ -2715,6 +2714,8 @@ class Lumine_Base extends Lumine_EventListener
 						$obj->insert();
 						$this->$name = $obj->$prop['options']['linkOn'];
 					}
+					$obj->destroy();
+					unset($obj);
 				}
 			}
 		}
@@ -2756,7 +2757,8 @@ class Lumine_Base extends Lumine_EventListener
 									$field = $val->_getRelation($relname);
 									$val->$field['name'] = $this->$field['linkOn'];
 									$val->save();
-									
+									$val->destroy();
+									unset($val);
 								} catch (Lumine_Exception $e) {
 									Lumine_log::warning('NÃ£o foi possÃ­vel encontrar o campo '.$relname.' em '.$val->_getName());
 								}
@@ -2807,7 +2809,7 @@ class Lumine_Base extends Lumine_EventListener
 									$ponte = new $clname( $this );
 									$ponte->execute($sql);
 									
-									// se nÃ£o existir
+									// se não existir
 									if($ponte->num_rows() == 0)
 									{
 										// insert
@@ -2817,7 +2819,6 @@ class Lumine_Base extends Lumine_EventListener
 										$ponte->execute($sql);
 									}
 								}
-								
 							} else {
 								// pega o valor do campo desta classe
 								$campo = $this->_getField($def['linkOn']);
@@ -2827,7 +2828,7 @@ class Lumine_Base extends Lumine_EventListener
 								// se este objeto tem um valor no campo indicado
 								if( !is_null($valor_pk))
 								{
-									// primeiro vemos se este valor jÃ¡ nÃ£o existe
+									// primeiro vemos se este valor já não existe
 									$sql = "SELECT * FROM " . $schema . $def['table'] . " WHERE ";
 									
 									// pega o valor do campo desta entidade
@@ -2865,12 +2866,18 @@ class Lumine_Base extends Lumine_EventListener
 										Lumine_Log::debug("Inserindo valor Many-To-Many: " .$sql);
 										$ponte->execute($sql);
 									}
+									$obj->destroy();
+									unset($obj);
 								} else {
 									Lumine_Log::warning('A o campo "'.$pks[0]['name'].' da classe "'.$this->_getName().'" nÃ£o possui um valor');
 								}
 							}
 						}
 					}
+					
+					$val->destroy();
+					$ponte->destroy();
+					unset($val, $ponte);
 				break;
 			}
 		}
@@ -3088,6 +3095,8 @@ class Lumine_Base extends Lumine_EventListener
 		{
 			$obj = new $classname;
 			$lista_objetos[] = $obj;
+			$obj->destroy();
+			unset($obj);
 		}
 		
 		// percorre a lista de tras pra frente
@@ -3100,9 +3109,6 @@ class Lumine_Base extends Lumine_EventListener
 				$lista_objetos[ $i - 1 ]->join( $lista_objetos[ $i ] );
 			}
 		}
-		
 	}
 }
-
-
 ?>
