@@ -51,10 +51,10 @@ class Lumine_Log {
 				case self::BROWSER:
 					echo $msg;
 					break;
-				
+			
 				case self::FILE:
 					$msg = strip_tags($msg);
-					
+				
 					if( ! empty(self::$filename))
 					{
 						$fp = @fopen(self::$filename, 'a+');
@@ -106,7 +106,8 @@ class Lumine_Log {
 	}
 	
 	public static function memoryUsage($real_usage = true) {
-		return memory_get_usage()/1048576 . ' MB';
+		$memory = memory_get_usage()/1048576;
+		return number_format($memory, 2, ',', ' ') .' MB';
 	}
 }
 

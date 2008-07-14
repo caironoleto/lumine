@@ -1,9 +1,7 @@
 <?php
 
 class Lumine_EventListener
-{
-
-	private $_listeners     = array();
+{	private $_listeners     = array();
 	protected $_event_types   = array();
 	
 	public function addEventListener($evt, $callback)
@@ -30,8 +28,6 @@ class Lumine_EventListener
 		{
 			$this->_listeners[ $evt ] = array();
 		}
-				
-		// $this->_listeners[ $evt ][] = $callback;
 	}
 	
 	public function removeAllListeners($evt)
@@ -59,8 +55,8 @@ class Lumine_EventListener
 	
 	function __destruct()
 	{
-	    $this->_listeners = array();
-	    $this->_event_types = array();
+	    unset($this->_listeners);
+	    unset($this->_event_types);
 	}
 
 }

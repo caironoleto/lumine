@@ -110,7 +110,6 @@ class Lumine_ConnectionManager extends Lumine_EventListener
 	function __destruct()
 	{
 	    unset($this->instance);
-	    $this->connections = array();
 	    parent::__destruct();
 	}
 }

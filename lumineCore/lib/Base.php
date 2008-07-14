@@ -191,89 +191,30 @@ class Lumine_Base extends Lumine_EventListener
 		// varre as chaves primarias em busca de classes pais
 		$this->_joinSubClasses( $this );
 	}
-
-	/**
-	 * destroi a classe
-	 *
-	 */
-	public function destroy()
-	{
+	
+	public function destroy() {
 		$this->__destruct();
 	}
 	
 	function __destruct()
 	{
-		$this->_join_list = array();
-		$this->_from = array();
-		
-		$list = get_object_vars( $this );
-		//print_r($list);
-		
-		foreach( $list as $key => $val )
-		{
-			if( isset($this->$key) )
-			{
-				unset( $this->$key );
+		if (count($this->_join_list) > 0) {
+			foreach ($this->_join_list as $key => $value) {
+				unset($value);
 			}
 		}
-		
-		$list = array();
-		
-		/*
-		unset($this->_bridge);
-		
-		// alias da tabela
-		$this->_alias = null;
-	
-		// partes da consulta
-		$this->_data = array();
-		$this->_where = array();
-		$this->_having = array();
-		$this->_order = array();
-		$this->_group = array();
-		$this->_join = array();
-		$this->_limit = null;
-		$this->_offset = null;
-		
-		// modo do resultado
-		$this->_fetch_mode = null;
-		
-		// armazena os valores das variaveis
-		$this->_dataholder = array();
-		$this->_original_dataholder = array();
-		$this->_multiInsertList = array();
-		
-		$this->_formatters = array();
-	    
-	    
-		unset($this->_join_list);
-		unset($this->_from);
-		unset($this->_bridge);
-		
-		// alias da tabela
-		unset($this->_alias);
-	
-		// partes da consulta
-		unset($this->_data);
-		unset($this->_where);
-		unset($this->_having);
-		unset($this->_order);
-		unset($this->_group);
-		unset($this->_join);
-		unset($this->_limit);
-		unset($this->_offset);
-		
-		// modo do resultado
-		unset($this->_fetch_mode);
-		
-		// armazena os valores das variaveis
-		//unset($this->_dataholder);
-		unset($this->_original_dataholder);
-		unset($this->_multiInsertList);
-		
-		unset($this->_formatters);
-		*/
-		
+
+		if (count($this->_from) > 0) {
+			foreach ($this->_from as $key => $value) {
+				unset($value);
+			}
+		}
+		$list = get_object_vars( $this );
+		foreach( $list as $key => $val )
+		{
+			unset($this->$key);
+		}
+		unset($this->_join_list, $this->_from, $list, $this->_bridge, $this->_alias, $this->_data, $this->_where, $this->_having, $this->_order, $this->_group, $this->_join, $this->_limit, $this->_offset, $this->_fetch_mode, $this->_dataholder, $this->_original_dataholder, $this->_multiInsertList, $this->_formatters, $this->_join_list, $this->_from, $this->_bridge, $this->_alia, $this->_data, $this->_where, $this->_having, $this->_order, $this->_group, $this->_join, $this->_limit, $this->_offset, $this->_fetch_mode, $this->_dataholder, $this->_original_dataholder, $this->_multiInsertList, $this->_formatters);
 		parent::__destruct();
 	}
 
@@ -1557,52 +1498,43 @@ class Lumine_Base extends Lumine_EventListener
       * @link http://www.hufersil.com.br/lumine
       * @return mixed Lumine_Base para Many-to-ONE, do contrÃ¡rio, uma lista de objetos Lumine_Base
       */	
-	public function _getLink( $linkName )
+	public function _getLink($linkName)
 	{
 		try
 		{
 			$field = $this->_getField( $linkName );
-
 			$class = empty($field['class']) ? $field['options']['class'] : $field['class'];			
-
 			$this->_getConfiguration()->import($class);
 			$obj = new $class;
-			
+
 			switch($field['type'])
 			{
 				case self::ONE_TO_MANY:
 					Lumine_Log::debug('Pegando link do tipo one-to-many de '.$obj->_getName());
 					$ref = $obj->_getField( $field['linkOn'] );
-				
 					$obj->$field['linkOn'] = $this->$ref['options']['linkOn'];
 					$obj->find();
-					
 					$newlist = array();
 					while($obj->fetch())
 					{
 						$new_obj = new $field['class'];
 						$new_obj->_setFrom($obj->toArray());
-						
-						$newlist[] = $new_obj;
-						
+						$list[] = $new_obj;
+						$new_obj->destroy();
+						unset($new_obj);
 					}
-					
+					$this->$linkName = $list;
 					$obj->destroy();
-					unset($obj);
-					
-					//$this->$linkName = $newlist;
-					return $newlist;
-					
+					unset($obj, $list);
+					return $this->$linkName;
 				break;
 				
 				case self::MANY_TO_MANY:
 					Lumine_Log::debug('Pegando link do tipo many-to-many de '.$obj->_getName());
 					$this->_getConfiguration()->import( $field['class'] );
-					
 					$list = new $field['class'];
 					$sql = "SELECT __a.* FROM %s __a, %s __b WHERE ";
 					$sql .= " __a.%s = __b.%s AND __b.%s = %s";
-					
 					$campoEstrangeiro = null;
 					foreach( $list->_foreign as $item )
 					{
@@ -1616,70 +1548,56 @@ class Lumine_Base extends Lumine_EventListener
 					{
 						throw new Exception("Deve haver relacionamento many-to-many em ambas as entidades");
 					}
-					
-					$fieldlink   = $list->_getField( $campoEstrangeiro['linkOn'] );			// pega a definiÃ§Ã£o do campo estrangeiro
-					$reffield    = $this->_getField( $field['linkOn'] );					// pega a definiÃ§Ã£o do campo desta entidade
-					$valor       = $this->$field['linkOn'];									// pega o valor do campo de linkagem desta entidade
-					$colunaUniao = $campoEstrangeiro['column'];								// pega o nome da coluna de uniÃ£o da entidade que serÃ¡ unida
-					$colunaLink  = $fieldlink['column'];									// pega o nome da coluna de link na tabela mtm estrangeira
-					$colunaWhere = $field['column'];										// pega o nome da coluna desta entidade para fazer o where
-					$tabelaUniao = $field['table'];											// pega o nome da tabela de uniÃ£o
-					$tabelaLink  = $list->tablename();										// pega o nome da entidade que serÃ¡ linkada
-					
+					$fieldlink = $list->_getField( $campoEstrangeiro['linkOn'] );
+					$reffield = $this->_getField( $field['linkOn'] );
+					$valor = $this->$field['linkOn'];
+					$colunaUniao = $campoEstrangeiro['column'];
+					$colunaLink = $fieldlink['column'];
+					$colunaWhere = $field['column'];
+					$tabelaUniao = $field['table'];
+					$tabelaLink = $list->tablename();
 					if( is_null($valor) )
 					{
-						//throw new Exception("Sem valores no campo {$field['linkOn']}, logo Ã© impossivel encontrar o relacionamento");
 						return array();
 					}
-					
 					$schema = $this->_getConfiguration()->getOption('schema_name');
 					if( !empty($schema) )
 					{
 						$tabelaUniao = $schema . '.' . $tabelaUniao;
 						$tabelaLink  = $schema . '.' . $tabelaLink;
 					}
-					
 					$valor = Lumine_Parser::getParsedValue( $reffield, $valor, $reffield['type'] );
-										
 					$sql = sprintf($sql, $tabelaLink, $tabelaUniao, $colunaLink, $colunaUniao, $colunaWhere, $valor);
 					$list->query( $sql );
-										
 					$arr_list = array();
-					
 					while($list->fetch())
 					{
 						$dummy = new $field['class'];
 						$dummy->_setFrom($list->toArray());
-						$arr_list[] = $dummy;
+						$listObj[] = $dummy;
+						$dummy->destroy();
+						unset($dummy);
 					}
-					
+					$this->$linkName = $listObj;
                     $list->destroy();
-					unset($list);
-					
-					//$this->$linkName = $arr_list;
-					return $arr_list;
-					
+                    $obj->destroy();
+					unset($list, $obj, $listObj);
+					return $this->$linkName;
 				break;
 				
 				case self::MANY_TO_ONE:
 				default:
 					Lumine_Log::debug('Pegando link do tipo many-to-one de '.$obj->_getName());
-					
 					$valor = $this->$linkName;
-					
 					if(!empty($valor))
 					{
 						$obj->$field['options']['linkOn'] = $this->$linkName;
 						$obj->find( true );
-						
 						$this->$linkName = $obj;
-						
 					}
-					
-					$obj->reset();
+					$obj->destroy();
 					unset($obj);
-					
-					return $obj;
+					return $this->$linkName;
 				break;
 				
 			}
