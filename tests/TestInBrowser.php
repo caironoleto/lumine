@@ -20,14 +20,20 @@ Lumine::import('Brinquedo', 'Crianca');
 #}
 
 $crianca = new Crianca;
-$crianca->find();
-while($crianca->fetch()) {
-	echo '<strong>Memory Usage before getLink: ' .Lumine_Log::memoryUsage() .'</strong><br />';
-	$brinquedos = $crianca->_getLink('brinquedos');
-	unset($brinquedos);
-	echo 'Criança ID: ' .$crianca->id .'<br />';
-	echo '<strong>Memory Usage after getLink: ' .Lumine_Log::memoryUsage() .'</strong><br />';
-}
+$crianca->find(true);
+print_r($crianca);
+echo '<br /><br /><br /><br /><br /><br />';
+$crianca->reset();
+print_r($crianca);
+
+#$crianca->find();
+#while($crianca->fetch()) {
+#	echo '<strong>Memory Usage before getLink: ' .Lumine_Log::memoryUsage() .'</strong><br />';
+#	$brinquedos = $crianca->_getLink('brinquedos');
+#	unset($brinquedos);
+#	echo 'Criança ID: ' .$crianca->id .'<br />';
+#	echo '<strong>Memory Usage after getLink: ' .Lumine_Log::memoryUsage() .'</strong><br />';
+#}
 $crianca->destroy();
 unset($crianca);
 echo '<strong>Memory Usage after destroy Crianca obj: ' .Lumine_Log::memoryUsage() .'</strong><br />';

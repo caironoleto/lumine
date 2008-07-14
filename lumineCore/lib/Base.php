@@ -1725,14 +1725,11 @@ class Lumine_Base extends Lumine_EventListener
 	{
 		$dialect = $this->_getConfiguration()->getProperty('dialect');
 		$class_dialect = 'Lumine_Dialect_' . $dialect;
-
 		$this->_join_list      = array($this);
 		$this->_from           = array($this);
 		$this->_bridge         = new $class_dialect( $this );
-		
 		// alias da tabela
 		$this->_alias          = '';
-	
 		// partes da consulta
 		$this->_data           = array();
 		$this->_where          = array();
@@ -1742,17 +1739,13 @@ class Lumine_Base extends Lumine_EventListener
 		$this->_join           = array();
 		$this->_limit          = null;
 		$this->_offset         = null;
-		
 		// modo do resultado
 		$this->_fetch_mode     = self::FETCH_ASSOC;
-		
 		// armazena os valores das variaveis
 		$this->_dataholder     = array();
 		$this->_original_dataholder = array();
 		$this->_multiInsertList = array();
-		
 		$this->_formatters = array();
-		
 		// re-une as classes (caso forem extendidas)
 		$this->_joinSubClasses();
 	}
