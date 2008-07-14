@@ -55,7 +55,7 @@ class Lumine_Configuration extends Lumine_EventListener
 
 		$this->options = $options;
 		
-		Lumine_ConnectionManager::getInstance()->create($this->options['package'], $this);
+		$this->setConnection(Lumine_ConnectionManager::getInstance()->create($this->options['package'], $this));
 	}
 	
 	public function setConnection(ILumine_Connection $conn)

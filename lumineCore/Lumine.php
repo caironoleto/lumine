@@ -53,6 +53,7 @@ abstract class Lumine
 		
 		foreach($args as $classname)
 		{
+			$newfile = $basedir . str_replace('.', DIRECTORY_SEPARATOR, $libname). '.php';
 			Lumine_Util::Import( $pacote . $classname );
 		}
 	}

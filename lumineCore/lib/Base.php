@@ -19,6 +19,7 @@ class Lumine_Base extends Lumine_EventListener
 {
 	const BASE_CLASS           = 'Lumine_Base';
 	const ONE_TO_MANY          = 1;
+	const ONE_TO_ONE          = 1;
 	const MANY_TO_ONE          = 2;
 	const MANY_TO_MANY         = 3;
 
@@ -39,12 +40,12 @@ class Lumine_Base extends Lumine_EventListener
 	const FETCH_BOTH           = 52;
 	
     /**
-     * Armazena o estado atual do objeto (estÃ¡ sendo usado)
+     * Armazena o estado atual do objeto (está sendo usado)
      */
 	protected static $state;
 
     /**
-     * DefiniÃ§Ã£o do objeto
+     * Definição do objeto
      */
 	protected $_definition     = array();
 	
@@ -83,7 +84,7 @@ class Lumine_Base extends Lumine_EventListener
      */	
 	protected $_from           = array();
     /**
-     * condiÃ§Ãµes de pesquisa
+     * condições de pesquisa
      */
 	protected $_where          = array();
     /**
@@ -99,7 +100,7 @@ class Lumine_Base extends Lumine_EventListener
      */
 	protected $_group          = array();
     /**
-     * lista de strings de uniÃ£o das classes
+     * lista de strings de união das classes
      */
 	protected $_join           = array();
     /**
@@ -112,7 +113,7 @@ class Lumine_Base extends Lumine_EventListener
 	protected $_offset         = null;
 	
     /**
-     * Modo do resultado (estÃ¡ sendo usado?)
+     * Modo do resultado (está sendo usado?)
      */
 	protected $_fetch_mode     = self::FETCH_ASSOC;
 	
@@ -159,8 +160,8 @@ class Lumine_Base extends Lumine_EventListener
 	
     /**
      * Construtor da classe
-	 * NÃ£o deverÃ¡ ser instanciado diretamente, e se a classe filha tiver um construtor
-	 * deverÃ¡ chamar este para que funcione corretamente.
+	 * Não deverá ser instanciado diretamente, e se a classe filha tiver um construtor
+	 * deverá chamar este para que funcione corretamente.
 	 * @author Hugo Ferreira da Silva
      */
      
@@ -219,7 +220,7 @@ class Lumine_Base extends Lumine_EventListener
 	}
 
 	//----------------------------------------------------------------------//
-	// MÃ©todos pÃºblicos                                                     //
+	// Métodos públicos                                                     //
 	//----------------------------------------------------------------------//
 	/**
 	 * Recupera registros a partir da chave primaria ou chave = valor
@@ -227,10 +228,11 @@ class Lumine_Base extends Lumine_EventListener
 	 * @param mixed $pk Valor da chave primaria ou nome do membro a ser pesquisado
 	 * @param mixed $pkValue Valor do campo quando pesquisado por um campo em especÃ­fico
 	 * @author Hugo Ferreira da Silva
-	 * @return int NÃºmero de registros encontrados.
+	 * @return int Número de registros encontrados.
 	 */	
 	public function get( $pk, $pkValue = null )
 	{
+		Lumine_Log::debug('Inicializando método Lumine_Base::get');
 		$this->dispatchEvent('preGet', $this);
 
 		if( !empty($pk) && ! empty($pkValue) )
@@ -245,7 +247,7 @@ class Lumine_Base extends Lumine_EventListener
 			
 			if( empty($list) )
 			{
-				Lumine_Log::warning( 'A entidade '.$this->_getName().' nÃ£o possui chave primÃ¡ria. Especifique um campo.');
+				Lumine_Log::warning( 'A entidade '.$this->_getName().' não possui chave primária. Especifique um campo.');
 				return 0;
 			}
 
@@ -255,7 +257,7 @@ class Lumine_Base extends Lumine_EventListener
 			$this->dispatchEvent('posGet', $this);
 			return $this->_bridge->num_rows();
 		}
-		Lumine_Log::warning('Nenhum valor informado para recuperaÃ§Ã£o em '.$this->_getName());
+		Lumine_Log::warning('Nenhum valor informado para recuperação em '.$this->_getName());
 	}
 
 	/**
@@ -265,7 +267,7 @@ class Lumine_Base extends Lumine_EventListener
 	 * $pessoa->email = 'eu@hufersil.com.br';
 	 * $pessoa->find();
 	 * </code>
-	 * GerarÃ¡ 
+	 * Gerará 
 	 * <code>
 	 * SELECT pessoa.nome, pessoa.email, pessoa.codpessoa, pessoa.data_cadastro FROM pessoa WHERE pessoa.email = 'eu@hufersil.com.br'
 	 * </code>
@@ -273,7 +275,7 @@ class Lumine_Base extends Lumine_EventListener
 	 * @param boolean $auto_fetch Ir para o primeiro registro assim que finalizado
 	 * @author Hugo Ferreira da Silva
 	 * @link http://www.hufersil.com.br/lumine Lumine - Mapeamento para banco de dados em PHP
-	 * @return int NÃºmero de registros encontrados.
+	 * @return int Número de registros encontrados.
 	 */
 	public function find( $auto_fetch = false )
 	{
@@ -296,12 +298,12 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
 	/**
-	 * Move o cursor para o prÃ³ximo registro
+	 * Move o cursor para o próximo registro
 	 *
 	 * @param boolean $getLinks Recuperar automaticamente os links do tipo Lazy
 	 * @author Hugo Ferreira da Silva
 	 * @link http://www.hufersil.com.br/lumine Lumine - Mapeamento para banco de dados em PHP
-	 * @return boolean True se existir registros, do contrÃ¡rio false
+	 * @return boolean True se existir registros, do contrário false
 	 */	
 	public function fetch( $getLinks = true )
 	{
@@ -321,14 +323,8 @@ class Lumine_Base extends Lumine_EventListener
 			{
 				$key = $def['name'];
 			}
-			
-			
-			
-			//if( gettype($val) != 'NULL')
-			//{			
 			$this->$key = $val;
 			$this->_original_dataholder[ $key ] = $val;
-			//}
 		}
 		
 		$this->loadLazy(  );
@@ -337,11 +333,11 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
 	/**
-	 * NÃºmero de registros encontrados na Ãºltima consulta
+	 * Número de registros encontrados na última consulta
 	 *
 	 * @author Hugo Ferreira da Silva
 	 * @link http://www.hufersil.com.br/lumine Lumine - Mapeamento para banco de dados em PHP
-	 * @return int NÃºmero de registros encontrados.
+	 * @return int Número de registros encontrados.
 	 */
 	public function numrows()
 	{
@@ -349,13 +345,13 @@ class Lumine_Base extends Lumine_EventListener
 	}
 
      /**
-      * Numero de linhas afetadas apÃ³s um UPDATE ou DELETE
+      * Numero de linhas afetadas após um UPDATE ou DELETE
       *
       * <code>
       * </code>
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return int NÃºmero de linhas afetadas
+      * @return int Número de linhas afetadas
       */
 	public function affected_rows()
 	{
@@ -368,14 +364,14 @@ class Lumine_Base extends Lumine_EventListener
       * <code>
 	  * $obj->count();
       * </code>
-	  * IrÃ¡ produzir
+	  * Irá produzir
       * <code>
 	  * SELECT count(*) FROM tabela
       * </code>
       * @param string $what coluna ou condicionamento desejado para efetuar a contagem
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return int NÃºmero de registros encontrados
+      * @return int Número de registros encontrados
       */
 	public function count($what = '*')
 	{
@@ -397,7 +393,7 @@ class Lumine_Base extends Lumine_EventListener
 	}
 
      /**
-      * Indica quais campos deverÃ£o ser selecionados em uma consulta (SELECT)
+      * Indica quais campos deverão ser selecionados em uma consulta (SELECT)
       *
 	  * <code>
 	  * $obj->select('nome, data_nascimento, codpessoa);
@@ -407,7 +403,7 @@ class Lumine_Base extends Lumine_EventListener
       * @param string $data String contendo os valores a serem selecionados
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return Lumine_Base A prÃ³pria classe
+      * @return Lumine_Base A própria classe
       */
 	public function select( $data )
 	{
@@ -423,7 +419,7 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
      /**
-      * Adiciona a seleÃ§Ã£o de campos de outra classe permitindo alterar seu padrÃ£o para nÃ£o mesclar
+      * Adiciona a seleção de campos de outra classe permitindo alterar seu padrão para não mesclar
       *
 	  * <code>
 	  * $pessoa = new Pessoa;
@@ -436,7 +432,7 @@ class Lumine_Base extends Lumine_EventListener
       * @param string $data String contendo os valores a serem selecionados
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return Lumine_Base A prÃ³pria classe
+      * @return Lumine_Base A própria classe
       */
 	public function selectAs( Lumine_Base $obj = null, $format = '%s' )
 	{
@@ -456,7 +452,7 @@ class Lumine_Base extends Lumine_EventListener
 	}
 
      /**
-      * Adiciona uma classe (tabela) a lista de seleÃ§Ã£o (SELECT .. FROM tabela1, tabela2)
+      * Adiciona uma classe (tabela) a lista de seleção (SELECT .. FROM tabela1, tabela2)
       *
       * <code>
 	  * $car = new Carro;
@@ -464,11 +460,11 @@ class Lumine_Base extends Lumine_EventListener
 	  * $car->from($car);
 	  * // SELECT * FROM pessoa, carro
       * </code>
-      * @param Lumine_Base $obj Objeto para uniÃ£o
-	  * @param strin $alias Alias para a tabela de uniÃ£o
+      * @param Lumine_Base $obj Objeto para união
+	  * @param strin $alias Alias para a tabela de união
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return Lumine_Base O prÃ³prio objeto
+      * @return Lumine_Base O próprio objeto
       */	
 	public function from(Lumine_Base $obj = null, $alias = null)
 	{
@@ -481,7 +477,7 @@ class Lumine_Base extends Lumine_EventListener
 				$obj->_setAlias($alias);
 			}
 			$this->_from[] = $obj;
-			// adiciona tambÃ©m na lista de join's
+			// adiciona também na lista de join's
 			$list = $obj->_getObjectPart('_join_list');
 			foreach($list as $ent)
 			{
@@ -507,7 +503,7 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
 	/**
-	 * Adiciona a consulta de uma classe para realizar uma consulta uniÃ£o
+	 * Adiciona a consulta de uma classe para realizar uma consulta união
 	 * <code>
 	 * $obj1 = new Teste;
 	 * $obj1->where('nome like ?', 'hugo');
@@ -518,7 +514,7 @@ class Lumine_Base extends Lumine_EventListener
 	 * // (SELECT * FROM teste WHERE nome like '%hugo%') UNION (SELECT * FROM teste WHERE nome like '%mirian%')
 	 * </code>
 	 * @param Lumine_Base $obj Objeto para unir com esta classe
-	 * @return Lumine_Union Uma instancia de Lumine_Union contendo as uniÃµes realizadas
+	 * @return Lumine_Union Uma instancia de Lumine_Union contendo as uniões realizadas
 	 * @author Hugo Ferreira da Silva
 	 */
 	function union(Lumine_Base $obj)
@@ -539,31 +535,31 @@ class Lumine_Base extends Lumine_EventListener
 	  * $car->join($car);
 	  * // SELECT pessoa.nome, pessoa.idpessoa, carro.modelo FROM pessoa inner join carro on(carro.idpessoa=pessoa.idpessoa)
       * </code>
-      * @param Lumine_Base $obj Objeto para uniÃ£o
-	  * @param string $type Tipo de uniÃ£o (LEFT|INNER|RIGHT)
-	  * @param string $alias Alias para a tabela de uniÃ£o
+      * @param Lumine_Base $obj Objeto para união
+	  * @param string $type Tipo de união (LEFT|INNER|RIGHT)
+	  * @param string $alias Alias para a tabela de união
 	  * @param string $linkName Nome especifico do link desta entidade
 	  * @param string $linkTo Nome da propriedade que se deseja linkar na outra entidade
-	  * @param string $extraCondition CondiÃ§Ã£o extra para adicionar a clausula ON da uniÃ£o
+	  * @param string $extraCondition Condição extra para adicionar a clausula ON da união
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return Lumine_Base O prÃ³prio objeto
+      * @return Lumine_Base O próprio objeto
       */
 	public function join( Lumine_Base $obj, $type = 'INNER', $alias = '', $linkName = null, $linkTo = null, $extraCondition = null )
 	{
 		if( !preg_match('@^(INNER|LEFT|CROSS)$@i', $type) )
 		{
-			Lumine_Log::error('Tipo de uniÃ£o nÃ£o permitida: ' . $type);
+			Lumine_Log::error('Tipo de união não permitida: ' . $type);
 			return $this;
 		}
 		
 		$type = strtoupper( $type );
 		
-		// verifica as chaves daqui pra lÃ¡
+		// verifica as chaves daqui pra lá
 		$name = $obj->_getName();
 		if( is_null( $linkName ) )
 		{
-			Lumine_Log::debug('Nome do link nÃ£o especificado. Tentando recuperar automaticamente de '.$name);
+			Lumine_Log::debug('Nome do link não especificado. Tentando recuperar automaticamente de '.$name);
 			$opt = $this->_getRelation( $name );
 		} else {
 			Lumine_Log::debug('Nome de link especificado: '. $linkName);
@@ -583,7 +579,7 @@ class Lumine_Base extends Lumine_EventListener
 			$dest = $obj->_getField( $linkTo );								// pega o link de destino
 		}
 		
-		if( !is_null($extraCondition) )										// se a pessoa definiu uma condiÃ§Ã£o extra
+		if( !is_null($extraCondition) )										// se a pessoa definiu uma condição extra
 		{
 			$args = func_get_args();
 			if( count($args) > 6 )
@@ -597,23 +593,23 @@ class Lumine_Base extends Lumine_EventListener
 			$extraCondition = trim($extraCondition);						// remove espaÃ§os em branco
 			
 			try {
-				$extraCondition = Lumine_Parser::parsePart($obj, $extraCondition, $args); // faz o parser para certificaÃ§Ã£o que os campos existem certinho
+				$extraCondition = Lumine_Parser::parsePart($obj, $extraCondition, $args); // faz o parser para certificação que os campos existem certinho
 				$extraCondition = Lumine_Parser::parseEntityNames($obj, $extraCondition); 
 
 			} catch(Exception $e) {
 			
 				try {
-					$extraCondition = Lumine_Parser::parsePart($this, $extraCondition, $args); // faz o parser para certificaÃ§Ã£o que os campos existem certinho
+					$extraCondition = Lumine_Parser::parsePart($this, $extraCondition, $args); // faz o parser para certificação que os campos existem certinho
 					$extraCondition = Lumine_Parser::parseEntityNames($this, $extraCondition); 
 					
 				} catch(Exception $e) {
-					Lumine_Log::warning('Houve um erro na analise da condiÃ§Ã£o extra');
+					Lumine_Log::warning('Houve um erro na analise da condição extra');
 				}
 			}
 			
-			if( !preg_match('@^(ON|AND)@i', $extraCondition) )				// se nÃ£o definiu o tipo de logica inicial
+			if( !preg_match('@^(ON|AND)@i', $extraCondition) )				// se não definiu o tipo de logica inicial
 			{
-				$extraCondition = " AND " . $extraCondition;				// o padrÃ£o Ã© AND
+				$extraCondition = " AND " . $extraCondition;				// o padrão é AND
 			}
 			$extraCondition .= " ";											// adiciona um espaÃ§o em branco para ficar certinho
 		}
@@ -621,36 +617,36 @@ class Lumine_Base extends Lumine_EventListener
 		// se a pessoa especificou um linkTo e linkName e ambos existem
 		if( $opt != null && $dest != null )
 		{
-			Lumine_Log::debug('Ambos links especificados, fazendo uniÃ£o...');
+			Lumine_Log::debug('Ambos links especificados, fazendo união...');
 			$schema = '';													// schema das tabelas
-			$cfg = $this->_getConfiguration();								// pega o objeto de configuraÃ§Ã£o
+			$cfg = $this->_getConfiguration();								// pega o objeto de configuração
 			if( $cfg->getOption('schema_name') != null )					// se especificou um schema
 			{
 				$schema = $cfg->getOption('schema_name').'.';				// coloca o nome do schema mais um ponto
 			}
 			
-			// se for uma uniÃ£o many-to-many e ambas tabelas forem iguais
+			// se for uma união many-to-many e ambas tabelas forem iguais
 			if( $opt['type'] == self::MANY_TO_MANY && $dest['type'] == self::MANY_TO_MANY && $opt['table'] == $dest['table'] )
 			{
 				Lumine_Log::debug('Link do tipo N-N');
-				$joinString = "%s JOIN %s ON %s.%s = %s.%s ".PHP_EOL;		// prepara a string de uniÃ£o
+				$joinString = "%s JOIN %s ON %s.%s = %s.%s ".PHP_EOL;		// prepara a string de união
 				$joinString .= " %s JOIN %s %s ON %s.%s = %s.%s ";
 				
-				$this_link = $this->_getField( $opt['linkOn'] );			// pega o campo referente a uniÃ£o desta entidade
-				$dest_link = $obj->_getField( $dest['linkOn'] );			// pega o campo referente a uniÃ£o da entidade que estÃ¡ sendo unida
+				$this_link = $this->_getField( $opt['linkOn'] );			// pega o campo referente a união desta entidade
+				$dest_link = $obj->_getField( $dest['linkOn'] );			// pega o campo referente a união da entidade que está sendo unida
 				
 				$joinString = sprintf($joinString,							// monta a string de join ...
 					
-					// primeiro, a uniÃ£o da tabela de N-N com esta entidade
-					$type,													// ... tipo de uniÃ£o
+					// primeiro, a união da tabela de N-N com esta entidade
+					$type,													// ... tipo de união
 					$schema . $opt['table'],								// ... nome da tabela N-N
 					$opt['table'],											// ... nome da tabela N-N com...
 					$opt['column'],											// ... o nome do campo N-N
 					$this->_getAlias(),										// ... alias desta entidade
 					$this_link[ 'column' ],									// ... coluna desta entidade
 
-					// agora, a uniÃ£o da tabela de N-N com a outra entidade
-					$type,													// tipo de uniÃ£o
+					// agora, a união da tabela de N-N com a outra entidade
+					$type,													// tipo de união
 					$schema . $obj->tablename(),							// nome da tabela estrangeira
 					$obj->_getAlias(),										// alias da tabela entrangeira
 					$obj->_getAlias(),										// alias da tabela entrangeira
@@ -659,27 +655,27 @@ class Lumine_Base extends Lumine_EventListener
 					$dest['column']											// nome da coluna da tabela N-N
 				);
 				
-				$this->_join[] = $joinString . $extraCondition;				// coloca a string de uniÃ£o na lista
+				$this->_join[] = $joinString . $extraCondition;				// coloca a string de união na lista
 				
 			} else {
 				Lumine_Log::debug('Link do tipo 1-N');
 				$joinString = "%s JOIN %s %s ON %s.%s = %s.%s";				// inicia a string do join
 				$joinString = sprintf( $joinString,							// faz o parse colocando...
-					$type,													// ... o tipo de uniÃ£o
-					$schema . $obj->tablename(),							// ... o nome da tabela que estÃ¡ sendo unida
-					$obj->_getAlias(),										// ... o alias usado na tabela que estÃ¡ sendo unida
+					$type,													// ... o tipo de união
+					$schema . $obj->tablename(),							// ... o nome da tabela que está sendo unida
+					$obj->_getAlias(),										// ... o alias usado na tabela que está sendo unida
 					$this->_getAlias(),										// ... o alias desta tabela
 					$opt['column'],											// ... a coluna desta tabela
-					$obj->_getAlias(),										// ... o alias da tabela que estÃ¡ sendo unida
-					$dest['column']											// ... a coluna que estÃ¡ sendo unida
+					$obj->_getAlias(),										// ... o alias da tabela que está sendo unida
+					$dest['column']											// ... a coluna que está sendo unida
 				);
 				
 				$this->_join[] = $joinString . $extraCondition;				// adiciona a string montada na lista
 			}
 
-		} else {															// mas se nÃ£o especificou o linkName e linkTo
+		} else {															// mas se não especificou o linkName e linkTo
 			// achou o relacionamento na outra entidade
-			// significa que lÃ¡ tem a chave que liga aqui ou vice-e-versa
+			// significa que lá tem a chave que liga aqui ou vice-e-versa
 			if($opt != null)
 			{
 				Lumine_Log::debug('Join de '.$obj->_getName().' com '. $this->_getName().' do tipo '.$opt['type'],  __FILE__, __LINE__ );
@@ -791,7 +787,7 @@ class Lumine_Base extends Lumine_EventListener
 						break;
 					
 					default:
-						throw new Lumine_Exception('Tipo de uniÃ£o nÃ£o encontrada: '.$opt['type'], Lumine_Exception::ERROR);
+						throw new Lumine_Exception('Tipo de união não encontrada: '.$opt['type'], Lumine_Exception::ERROR);
 				}
 			}
 		}
@@ -882,7 +878,7 @@ class Lumine_Base extends Lumine_EventListener
 		// vejamos se inseriu
 		if($result == true)
 		{
-			// vamos analisar as chaves primarias e auto-incrementÃ¡veis
+			// vamos analisar as chaves primarias e auto-incrementáveis
 			// para ver os valores e pegar do banco
 			$pks = $this->_getPrimaryKeys();
 			foreach($pks as $pk)
@@ -905,8 +901,8 @@ class Lumine_Base extends Lumine_EventListener
 
      /**
       * Salva / insere o objeto
-      * Se a chave primÃ¡ria estiver definida, efetua um update
-	  * do contrÃ¡rio, efetua um insert
+      * Se a chave primária estiver definida, efetua um update
+	  * do contrário, efetua um insert
       *
       * @param boolean $whereAddOnly Utilizar somente os parametros definidos com where para atualizar
       * @author Hugo Ferreira da Silva
@@ -917,27 +913,37 @@ class Lumine_Base extends Lumine_EventListener
 		$this->dispatchEvent('preSave', $this);
 		// para chamar o update, todas as chaves primarias tem que ter valor
 		$pks = $this->_getPrimaryKeys();
-		$all = true;
+		$fks = $this->_getForeignRelations();
 		
+		$checkPrimaryKeys = true;
+		$checkForeignKeys = false;
 		// salva os objetos principais (classes extendidas)
-		// $this->savePendingObjects();
+		$this->savePendingObjects();
 		
-		foreach($pks as $def)
-		{
-			if($this->$def['name'] == null)
-			{
-				$all = false;
+		foreach($pks as $def) {
+			$prop = $this->$def['name'];
+			if(($prop == null) || (empty($prop)))	{
+				$checkPrimaryKeys = false;
+				break;
+			}
+		}
+
+		foreach ($fks as $key => $value) {
+			if($this->$key != null) {
+				$checkForeignKeys = true;
 				break;
 			}
 		}
 		
-		if($all == true)
-		{
-			$this->update( $whereAddOnly );
-			return $this->affected_rows();
-		} else {
-			return $this->insert();
-		}
+		if ( $checkPrimaryKeys == true)
+			$this->update();
+		else
+			$this->insert();
+			
+		if ($checkForeignKeys == true)
+			$this->saveDependentObjects();
+			
+		return $this->affected_rows();
 	}
 	
      /**
@@ -946,18 +952,17 @@ class Lumine_Base extends Lumine_EventListener
       * @param boolean $whereAddOnly Utilizar somente os parametros definidos com where para atualizar
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return int NÃºmero de linhas atualizadas
+      * @return int Número de linhas atualizadas
       */
 	public function update( $whereAddOnly = false )
 	{
 		$this->dispatchEvent('preUpdate', $this);
 		
 		$this->savePendingObjects();
-		
+				
 		$sql = $this->_getSQL(self::SQL_UPDATE, $whereAddOnly);
 		
-		if( $sql !== false )
-		{
+		if( $sql !== false ) {
 			$this->_execute($sql);
 				
 			$this->dispatchEvent('posUpdate', $this);
@@ -988,17 +993,17 @@ class Lumine_Base extends Lumine_EventListener
 		
 		$this->dispatchEvent('posDelete', $this);
 		
-		return $sql;
+		return true;
 	}
 	
      /**
-      * Adiciona a clausula LIMIT Ã  consulta
+      * Adiciona a clausula LIMIT à consulta
       *
       * @param int $offset Inicio dos registros ou limite se o segundo argumento for omitido
 	  * @param int $limit Numero de registros a serem limitados
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return Lumine_Base O prÃ³prio objeto
+      * @return Lumine_Base O próprio objeto
       */
 	public function limit($offset = null, $limit = null)
 	{
@@ -1019,7 +1024,7 @@ class Lumine_Base extends Lumine_EventListener
       * @param string $havingStr String para ser adiciona ao having. Se for nulo, limpa as clausulas
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return Luminie_Base O prÃ³prio objeto
+      * @return Luminie_Base O próprio objeto
       */	
 	public function having( $havingStr = null )
 	{
@@ -1045,8 +1050,8 @@ class Lumine_Base extends Lumine_EventListener
 	
      /**
       * Adiciona clausulas where a consulta
-      * Ã possÃ­vel adicionar clausulas no modo de preparedStatment
-	  * Funciona somente quando se estÃ¡ comparando com os termos abaixo:
+      * É possí­vel adicionar clausulas no modo de preparedStatment
+	  * Funciona somente quando se está comparando com os termos abaixo:
 	  * =, >=, <=, !=, <>, >, <, like, ilike, not like
       * <code>
 	  * $obj = new Pessoa;
@@ -1058,7 +1063,7 @@ class Lumine_Base extends Lumine_EventListener
       * @param string $whereStr String para adicionar a clausula where
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-	  * @return Lumine_Base A prÃ³pria classe
+	  * @return Lumine_Base A própria classe
       */
 	public function where( $whereStr = null )
 	{
@@ -1088,7 +1093,7 @@ class Lumine_Base extends Lumine_EventListener
       * @param string $orderStr String para utilizar no order by
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return Lumine_Base O prÃ³prio objeto
+      * @return Lumine_Base O próprio objeto
       */
 	public function order( $orderStr = null )
 	{
@@ -1108,7 +1113,7 @@ class Lumine_Base extends Lumine_EventListener
       * @param strin $groupStr String para adicionar ao agrupamento
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return Lumine_Base O prÃ³rio objeto
+      * @return Lumine_Base O prório objeto
       */
 	public function group( $groupStr = null )
 	{
@@ -1123,7 +1128,7 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
      /**
-      * Seta as variaveis internas atravÃ©s de um array associativo enviado
+      * Seta as variaveis internas através de um array associativo enviado
       *
       * <code>
 	  * $obj->_setFrom($_POST);
@@ -1131,7 +1136,7 @@ class Lumine_Base extends Lumine_EventListener
       * @param array $arr Array associativo contendo os valores
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return Lumine_Base O prÃ³prio objeto
+      * @return Lumine_Base O próprio objeto
       */
 	public function _setFrom( $arr )
 	{
@@ -1161,11 +1166,11 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
      /**
-      * Recupera a definiÃ§Ã£o dos campos da classe
-      * EspecÃ­fico para as colunas da tabela representada pela classe
+      * Recupera a definição dos campos da classe
+      * Específico para as colunas da tabela representada pela classe
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return array Lista contendo as definiÃ§Ãµes de cada campo
+      * @return array Lista contendo as definições de cada campo
       */
 	public function _getDefinition()
 	{
@@ -1177,7 +1182,7 @@ class Lumine_Base extends Lumine_EventListener
       *
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return array Lista contendo as chaves estrangeiras e suas definiÃ§Ãµes
+      * @return array Lista contendo as chaves estrangeiras e suas definições
       */
 	public function _getForeignRelations()
 	{
@@ -1210,7 +1215,7 @@ class Lumine_Base extends Lumine_EventListener
       * @param string $name Nome do campo a ser recuperado
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return array Matriz associativa contendo a definiÃ§Ã£o do campo
+      * @return array Matriz associativa contendo a definição do campo
 	  * @throws Lumine_Exception 
       */
 	public function _getField( $name )
@@ -1229,7 +1234,7 @@ class Lumine_Base extends Lumine_EventListener
 			return $def;
 		}
 		
-		throw new Lumine_Exception('O campo '.$name.' nÃ£o foi encontrado em '.$this->_getName(), Lumine_Exception::ERROR);
+		throw new Lumine_Exception('O campo '.$name.' não foi encontrado em '.$this->_getName(), Lumine_Exception::ERROR);
 	}
 	
      /**
@@ -1237,7 +1242,7 @@ class Lumine_Base extends Lumine_EventListener
       *
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return array Matriz associativa contendo a definiÃ§Ã£o do campo
+      * @return array Matriz associativa contendo a definição do campo
 	  * @see _getField
       */	
 	public function _getFieldByColumn( $column )
@@ -1270,7 +1275,7 @@ class Lumine_Base extends Lumine_EventListener
 
      /**
       * Altera o alias para consulta
-      * Depois de alterado, vocÃª poderÃ¡ usar o alias seguido do nome do membro da classe
+      * Depois de alterado, você poderá usar o alias seguido do nome do membro da classe
       * <code>
 	  * $pes = new Pessoa;
 	  * $pes->_setAlias('p');
@@ -1280,7 +1285,7 @@ class Lumine_Base extends Lumine_EventListener
       * @param string $alias Novo alias a ser usado
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return Lumine_Base A prÃ³pria classe
+      * @return Lumine_Base A própria classe
       */
 	public function _setAlias($alias)
 	{
@@ -1304,7 +1309,7 @@ class Lumine_Base extends Lumine_EventListener
 	 * Recupera/altera o alias atual
 	 *
 	 * @param mixed $alias null => retorna o alias atual, false => reinicia o alias, outro valor => altera o valor do alias
-	 * @return mixed Se null, retorna o alias atual, do contrÃ¡rio, o proprio objeto
+	 * @return mixed Se null, retorna o alias atual, do contrário, o proprio objeto
 	 * @author Hugo Ferreira da Silva
 	 * @link http://www.hufersil.com.br/lumine
 	 * @return string Alias atual da classe
@@ -1327,7 +1332,7 @@ class Lumine_Base extends Lumine_EventListener
 
      /**
       * Recupera uma determinada parte do objeto que seja privada
-      * Este mÃ©todo Ã© usado mais internamente, para facilitar na manipulaÃ§Ã£o das partes privadas do objeto
+      * Este método é usado mais internamente, para facilitar na manipulação das partes privadas do objeto
       * @param string $partName Nome da parte a ser recuperada
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
@@ -1337,7 +1342,7 @@ class Lumine_Base extends Lumine_EventListener
 	{
 		if( ! isset($this->$partName))
 		{
-			throw new Lumine_Exception('Parte nÃ£o encontrada: '.$partName, Lumine_Exception::ERROR);
+			throw new Lumine_Exception('Parte não encontrada: '.$partName, Lumine_Exception::ERROR);
 		}
 		return $this->$partName;
 	}
@@ -1361,7 +1366,7 @@ class Lumine_Base extends Lumine_EventListener
       * </code>
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return ILumine_Connection Objeto de conexÃ£o com o banco atual
+      * @return ILumine_Connection Objeto de conexão com o banco atual
       */
 	public static function _getConnection()
 	{
@@ -1369,11 +1374,11 @@ class Lumine_Base extends Lumine_EventListener
 	}
 
      /**
-      * Recupera uma lista contendo as chaves primÃ¡rias
+      * Recupera uma lista contendo as chaves primárias
       *
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return array Lista das chaves primÃ¡rias
+      * @return array Lista das chaves primárias
       */
 	public function _getPrimaryKeys()
 	{
@@ -1394,8 +1399,8 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
      /**
-      * Recupera o tipo de SQL que serÃ¡ executada
-      * VocÃª poderÃ¡ chamar este mÃ©todo para saber como estÃ¡ ficando a estrutura da consulta, por exemplo:
+      * Recupera o tipo de SQL que será executada
+      * Você poderá chamar este método para saber como está ficando a estrutura da consulta, por exemplo:
       * <code>
 	  * $obj = new Pessoa;
 	  * $obj->get(20);
@@ -1411,7 +1416,7 @@ class Lumine_Base extends Lumine_EventListener
 	  * // DELETE FROM pessoa WHERE idpessoa = 20
       * </code>
       * @param int $type Tipo de SQL a ser retornada
-	  * @param mixed $opt OpÃ§Ãµes a serem usadas, dependendo do tipo de SQL a ser retornada
+	  * @param mixed $opt Opções a serem usadas, dependendo do tipo de SQL a ser retornada
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
       * @return string SQL desejada
@@ -1465,12 +1470,12 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
      /**
-      * Recupera/Altera o modo de recuperaÃ§Ã£o dos registros do banco.
+      * Recupera/Altera o modo de recuperação dos registros do banco.
       *
       * @param int $mode Modo a ser utilizado ou null para recuperar o atual
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return int Modo atual de recueperaÃ§Ã£o de registros
+      * @return int Modo atual de recueperação de registros
       */
 	public function fetchMode($mode = null)
 	{
@@ -1496,24 +1501,60 @@ class Lumine_Base extends Lumine_EventListener
       * @param string $linkName Nome do link
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return mixed Lumine_Base para Many-to-ONE, do contrÃ¡rio, uma lista de objetos Lumine_Base
+      * @return mixed Lumine_Base para Many-to-ONE, do contrário, uma lista de objetos Lumine_Base
       */	
-	public function _getLink($linkName)
-	{
-		try
-		{
-			$field = $this->_getField( $linkName );
-			$class = empty($field['class']) ? $field['options']['class'] : $field['class'];			
+	public function _getLink( $linkName , $linkLimit = 0) {
+		
+		$parms = func_get_args();
+		
+		/**
+		 * Checks if the call use LIMIT or init,LIMIT
+		 */
+		$limits = array();
+		$limits[0] = $parms[2] != null && is_numeric($parms[2]) ? $parms[2] : 0;
+		$limits[1] = $parms[1] != null && is_numeric($parms[1]) ? $parms[1] : 100;
+		
+		$orderBy = $parms[1] != null && !is_numeric($parms[1]) ? $parms[1] : null;
+		if($orderBy == null) {
+			$orderBy = $parms[2] != null && !is_numeric($parms[2]) ? $parms[2] : $parms[3];
+		}
+
+		try {
+			$field = $this->_getField( $linkName , $limit );
+
+			$class = empty($field['class']) ? $field['options']['class'] : $field['class'];		
+
 			$this->_getConfiguration()->import($class);
 			$obj = new $class;
 
-			switch($field['type'])
-			{
+			
+			switch($field['type']) {
+				/**
+				 * Alterado do lumine original
+				 * @todo Alterado
+				 */
 				case self::ONE_TO_MANY:
 					Lumine_Log::debug('Pegando link do tipo one-to-many de '.$obj->_getName());
-					$ref = $obj->_getField( $field['linkOn'] );
-					$obj->$field['linkOn'] = $this->$ref['options']['linkOn'];
+					/*
+					 * para manter compatibilidade com versões anteriores
+					 * @todo remover esta linha de $ref numa versão futura
+					 */
+					
+					$ref = $obj->_getField( $field['linkOn']);
+					
+					//$obj->$field['linkOn'] = $this->$ref['options']['linkOn'];
+					/*
+					 * @todo Alteração para relacionamento unidirecional
+					 * @todo proxima versao manter apenas o codigo:
+					 * $obj->$field['linkOn'] = $this->$field['colRef'];
+					 * para forçar o upgrade de codigo dos desenvolvedores
+					 */
+					$obj->limit($limits[0],$limits[1]);
+					$obj->order($orderBy);
+
+					$obj->$field['linkOn'] = !is_null($this->$field['colRef']) ?  $this->$field['colRef'] : $this->$ref['options']['linkOn'];
 					$obj->find();
+					
 					$newlist = array();
 					while($obj->fetch())
 					{
@@ -1527,14 +1568,17 @@ class Lumine_Base extends Lumine_EventListener
 					$obj->destroy();
 					unset($obj, $list);
 					return $this->$linkName;
+					
 				break;
 				
 				case self::MANY_TO_MANY:
 					Lumine_Log::debug('Pegando link do tipo many-to-many de '.$obj->_getName());
 					$this->_getConfiguration()->import( $field['class'] );
+					
 					$list = new $field['class'];
 					$sql = "SELECT __a.* FROM %s __a, %s __b WHERE ";
 					$sql .= " __a.%s = __b.%s AND __b.%s = %s";
+					
 					$campoEstrangeiro = null;
 					foreach( $list->_foreign as $item )
 					{
@@ -1558,18 +1602,24 @@ class Lumine_Base extends Lumine_EventListener
 					$tabelaLink = $list->tablename();
 					if( is_null($valor) )
 					{
+//						throw new Exception("Sem valores no campo {$field['linkOn']}, logo é impossivel encontrar o relacionamento");
 						return array();
 					}
+					
 					$schema = $this->_getConfiguration()->getOption('schema_name');
 					if( !empty($schema) )
 					{
 						$tabelaUniao = $schema . '.' . $tabelaUniao;
 						$tabelaLink  = $schema . '.' . $tabelaLink;
 					}
+					
 					$valor = Lumine_Parser::getParsedValue( $reffield, $valor, $reffield['type'] );
+										
 					$sql = sprintf($sql, $tabelaLink, $tabelaUniao, $colunaLink, $colunaUniao, $colunaWhere, $valor);
 					$list->query( $sql );
+										
 					$arr_list = array();
+					
 					while($list->fetch())
 					{
 						$dummy = new $field['class'];
@@ -1588,12 +1638,15 @@ class Lumine_Base extends Lumine_EventListener
 				case self::MANY_TO_ONE:
 				default:
 					Lumine_Log::debug('Pegando link do tipo many-to-one de '.$obj->_getName());
+					
 					$valor = $this->$linkName;
+					
 					if(!empty($valor))
 					{
 						$obj->$field['options']['linkOn'] = $this->$linkName;
 						$obj->find( true );
 						$this->$linkName = $obj;
+						
 					}
 					$obj->destroy();
 					unset($obj);
@@ -1612,7 +1665,7 @@ class Lumine_Base extends Lumine_EventListener
       * Cada linha do array representa uma linha de registro encontrado
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-	  * @param boolean $returnRealValues ForÃ§a o retorno dos valores reais do banco
+	  * @param boolean $returnRealValues Força o retorno dos valores reais do banco
       * @return array Todos registros em um array
       */
 	public function allToArray( $returnRealValues = false )
@@ -1641,57 +1694,53 @@ class Lumine_Base extends Lumine_EventListener
       * Converte o registro atual para um array
       *
       * @author Hugo Ferreira da Silva
-	  * @param boolean $returnRealValues ForÃ§a o retorno dos valores reais do banco
+	  * @param boolean $returnRealValues Força o retorno dos valores reais do banco
 	  * @param String $format Formato do nome do campo para ser utilizado com sprintf
       * @link http://www.hufersil.com.br/lumine
       * @return array Array do registro atual
       */	
-	public function toArray( $format = '%s', $returnRealValues = false)
-	{
+	public function toArray( $format = '%s', $returnRealValues = false) {
 		$list = array();
 
-		foreach($this->_dataholder as $key => $val)
-		{
+		
+		foreach($this->_dataholder as $key => $val) {
 			$newkey = sprintf($format, $key);
 			
 			$fld = $this->_getFieldByColumn( $key );
-			if( !empty($fld))
-			{
+			if( !empty($fld)) {
 				$key = $fld['name'];
 			}
-			if( $returnRealValues == true )
-			{
+			
+			if( $returnRealValues == true ) {
 				$val = $this->fieldValue( $key );
 			} else {
 				$val = $this->$key;
 			}
 			
-			if(is_a($val, self::BASE_CLASS))
-			{
+			if(is_a($val, self::BASE_CLASS)) {
 				$list[ $newkey ] = $val->toArray( $format );
-
-			} else if(is_array($val)) {
-				foreach($val as $k => $v)
-				{
-					$nk = sprintf($format, $k);
-					if(is_a($v, self::BASE_CLASS))
-					{
-						$val[ $nk ] = $v->toArray( $format );
-					} else {
-						$val[ $nk ] = $v;
-					}
-				}
-				
 			} else {
-				$list[ $newkey ] = $val;
+				if(is_array($val)) {
+					foreach($val as $k => $v) {
+						$nk = sprintf($format, $k);
+						if(is_a($v, self::BASE_CLASS)) {
+							$list2[ $nk ] = $v->toArray( $format );
+						} else {
+							$list2[ $nk ] = $v;
+						}
+					}
+					$list[$newkey] = $list2;
+					unset($list2);
+				} else {
+					$list[ $newkey ] = $val;
+				}
 			}
 		}
-
 		return $list;
 	}
 	
      /**
-      * "Escapa" uma string para inserÃ§Ã£o/consulta no banco de dados
+      * "Escapa" uma string para inserção/consulta no banco de dados
       *
       * @param string $str String a ser "escapada"
       * @author Hugo Ferreira da Silva
@@ -1704,7 +1753,7 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
      /**
-      * Efetua uma validaÃ§Ã£o
+      * Efetua uma validação
       *
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
@@ -1728,8 +1777,10 @@ class Lumine_Base extends Lumine_EventListener
 		$this->_join_list      = array($this);
 		$this->_from           = array($this);
 		$this->_bridge         = new $class_dialect( $this );
+		
 		// alias da tabela
 		$this->_alias          = '';
+	
 		// partes da consulta
 		$this->_data           = array();
 		$this->_where          = array();
@@ -1739,13 +1790,17 @@ class Lumine_Base extends Lumine_EventListener
 		$this->_join           = array();
 		$this->_limit          = null;
 		$this->_offset         = null;
+		
 		// modo do resultado
 		$this->_fetch_mode     = self::FETCH_ASSOC;
+		
 		// armazena os valores das variaveis
 		$this->_dataholder     = array();
 		$this->_original_dataholder = array();
 		$this->_multiInsertList = array();
+		
 		$this->_formatters = array();
+		
 		// re-une as classes (caso forem extendidas)
 		$this->_joinSubClasses();
 	}
@@ -1800,15 +1855,15 @@ class Lumine_Base extends Lumine_EventListener
 				break;
 			}
 		} catch(Exception $e) {
-			Lumine_Log::warning('Link nÃ£o encontrado: '.$linkname);
+			Lumine_Log::warning('Link não encontrado: '.$linkname);
 		}
 	}
 	
 	/** 
 	 * Adiciona um formatador a um campo
 	 * @param String $member Nome do membro da classe
-	 * @param mixed $formatter FunÃ§Ã£o / array de classe e mÃ©todo para formatar o valor
-	 * @return Lumine_Base O prÃ³prio objeto
+	 * @param mixed $formatter Função / array de classe e método para formatar o valor
+	 * @return Lumine_Base O próprio objeto
 	 */
 	public function addFormatter( $member, $formatter )
 	{
@@ -1822,8 +1877,8 @@ class Lumine_Base extends Lumine_EventListener
 	
 	/**
 	 * @param String $member Nome do membro da classe
-	 * @param mixed $formatter FunÃ§Ã£o / array de classe e mÃ©todo para ser removido dos formatadores
-	 * @return Lumine_Base O prÃ³prio objeto
+	 * @param mixed $formatter Função / array de classe e método para ser removido dos formatadores
+	 * @return Lumine_Base O próprio objeto
 	 */
 	public function removeFormatter( $member, $formatter )
 	{
@@ -1911,7 +1966,7 @@ class Lumine_Base extends Lumine_EventListener
 			return $this->_dataholder[ $key ];
 			
 		} catch (Exception $e) {
-			// Lumine_Log::warning( 'Campo nÃ£o encontrado: '.$key);
+			// Lumine_Log::warning( 'Campo não encontrado: '.$key);
 			
 			// se encontrar, retorna o que encontrou
 			if( isset($this->_dataholder[ $key ]))
@@ -1924,7 +1979,7 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
 	//////////////////////////////////////////////////////////////////
-	// mÃ©todos depreciados, existem por questÃµes de compatibilidade //
+	// métodos depreciados, existem por questões de compatibilidade //
 	//////////////////////////////////////////////////////////////////
     /**
      * @see group
@@ -1981,7 +2036,7 @@ class Lumine_Base extends Lumine_EventListener
      */
 	public function setFrom($arr)
 	{
-		Lumine_Log::debug( "Por questÃµes de compatibilidade, use _setFrom");
+		Lumine_Log::debug( "Por questões de compatibilidade, use _setFrom");
 		return $this->_setFrom($arr);
 	}
 	
@@ -1989,17 +2044,27 @@ class Lumine_Base extends Lumine_EventListener
      * @see _getLink
 	 * @deprecated
      */
-	public function getLink($linkName)
+	public function getLink($linkName,$linkLimit = 100)
 	{
-		Lumine_Log::debug( "Por questÃµes de compatibilidade, use _getLink");
-		return $this->_getLink($linkName);
+		Lumine_Log::debug( "Por questões de compatibilidade, use _getLink");
+		
+		$parms = func_get_args();
+
+		/**
+		 * Checks if the call use LIMIT or init,LIMIT
+		 */
+		$limit = array();
+		$limit[0] = $parms[2] != null ? $parms[2] : 0;
+		$limit[1] = $parms[1] != null ? $parms[1] : 100;
+		
+		return $this->_getLink($linkName,$limit[1],$limit[0]);
 	}
 	
 	/**
-	 * Executa uma query definida pelo usuÃ¡rio
+	 * Executa uma query definida pelo usuário
 	 * @author Hugo Ferreira da Silva
 	 * @param string $sql Comando SQL a ser executado
-	 * @return int NÃºmero de registros encontrados / afetados
+	 * @return int Número de registros encontrados / afetados
 	 */
 	public function query( $sql )
 	{
@@ -2025,9 +2090,9 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
 	/**
-	 * Efetua um comando de multi-inserÃ§Ã£o
+	 * Efetua um comando de multi-inserção
 	 * Ex: INSERT INTO tabela (campo1, campo2, campo3) VALUES (...,...,...), (...,...,...), (...,...,...)
-	 * @param boolean $ignoreAutoIncrement NÃ£o inclui campos auto-incrementÃ¡veis no insert
+	 * @param boolean $ignoreAutoIncrement Não inclui campos auto-incrementáveis no insert
 	 * @author Hugo Ferreira da Silva
 	 */
 	public function multiInsert( $ignoreAutoIncrement = true )
@@ -2042,19 +2107,19 @@ class Lumine_Base extends Lumine_EventListener
 		
 		$this->dispatchEvent('onPreMultiInsert', $this, $sql);									// dispara o pre-evento
 		
-		$this->_execute( $sql );																// executa a inserÃ§Ã£o
+		$this->_execute( $sql );																// executa a inser��o
 		
 		$this->dispatchEvent('onPosMultiInsert', $this, $sql);									// dispara o pos evento
 		return true;																			// retorna true
 	}
 
 	//----------------------------------------------------------------------//
-	// MÃ©todos protegidos                                                   //
+	// Métodos protegidos                                                   //
 	//----------------------------------------------------------------------//	
 
      /**
-      * InicializaÃ§Ã£o da classe, chamada no construtor
-      * Aqui serÃ£o adicionadas as chamadas para adicionar as propriedades da classe
+      * Inicialização da classe, chamada no construtor
+      * Aqui serão adicionadas as chamadas para adicionar as propriedades da classe
       * para mapeamento.
       * 
       * @author Hugo Ferreira da Silva
@@ -2065,16 +2130,16 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
 	/**
-	 * Efetua um comando de multi-inserÃ§Ã£o
+	 * Efetua um comando de multi-inserção
 	 * Ex: INSERT INTO tabela (campo1, campo2, campo3) VALUES (...,...,...), (...,...,...), (...,...,...)
-	 * @param boolean $ignoreAutoIncrement NÃ£o inclui campos auto-incrementÃ¡veis no insert
+	 * @param boolean $ignoreAutoIncrement Não inclui campos auto-incrementáveis no insert
 	 * @author Hugo Ferreira da Silva
 	 */
 	protected function _getMultiInsertSQL($ignoreAutoIncrement = true)
 	{
-		if( empty($this->_multiInsertList) )													// se nÃ£o hÃ¡ itens na lista
+		if( empty($this->_multiInsertList) )													// se não há itens na lista
 		{
-			Lumine_Log::warning('NÃ£o hÃ¡ itens para inserir com o MULTI-INSERT');				// envia um alerta no log
+			Lumine_Log::warning('Não há itens para inserir com o MULTI-INSERT');				// envia um alerta no log
 			return false;																		// retorna falso
 		}
 		
@@ -2088,18 +2153,18 @@ class Lumine_Base extends Lumine_EventListener
 		}
 		
 		$columns = array();																		// lista das colunas da tabela
-		reset( $this->_definition );															// reinicia a definiÃ§Ã£o
+		reset( $this->_definition );															// reinicia a definição
 		
-		foreach( $this->_definition as $name => $prop )											// para cada item da definiÃ§Ã£o
+		foreach( $this->_definition as $name => $prop )											// para cada item da definição
 		{
 			if( !empty($prop['options']['autoincrement']) && $ignoreAutoIncrement == true )  	// se for auto-inc. e for para igonrar
 			{
 				continue;																		// pula este campo
 			}
-			$columns[] = $prop['column'];														// adiciona o campo na lista de inserÃ§Ã£o
+			$columns[] = $prop['column'];														// adiciona o campo na lista de inserção
 		}
 		
-		reset( $this->_definition );															// reinicia a definiÃ§Ã£o
+		reset( $this->_definition );															// reinicia a definição
 		
 		$sql = "INSERT INTO " . $schema.$this->tablename() ;									// monta a consulta
 		$sql .= '(' . implode(', ', $columns) . ')';											// adiciona os nomes dos campos
@@ -2116,7 +2181,7 @@ class Lumine_Base extends Lumine_EventListener
 	  * @param string $column Nome da coluna na tabela
 	  * @param string $type Tipo de dados no banco
 	  * @param int $length Comprimento do campo no banco de dados
-	  * @param array $options OpÃ§Ãµes do campo
+	  * @param array $options Opções do campo
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
       */	
@@ -2134,7 +2199,7 @@ class Lumine_Base extends Lumine_EventListener
 				$this->_definition[ $name ]['primary']  = true;
 			}
 		} else {
-			throw new Lumine_Exception('Uma classe nÃ£o pode conter campos duplicados ('.$name.').', Lumine_Exception::ERROR);
+			throw new Lumine_Exception('Uma classe não pode conter campos duplicados ('.$name.').', Lumine_Exception::ERROR);
 		}
 		
 		
@@ -2151,7 +2216,7 @@ class Lumine_Base extends Lumine_EventListener
 				$this->_fieldsByColumn[ $column ]['primary']  = true;
 			}
 		} else {
-			throw new Lumine_Exception('Uma classe nÃ£o pode conter colunas duplicadas ('.$column.').', Lumine_Exception::ERROR);
+			throw new Lumine_Exception('Uma classe não pode conter colunas duplicadas ('.$column.').', Lumine_Exception::ERROR);
 		}
 	}
 	
@@ -2160,15 +2225,16 @@ class Lumine_Base extends Lumine_EventListener
       *
       * @param string $name Nome do relacionamento
 	  * @param int $type Tipo do relacionamento
-	  * @param string $class Nome da classe que serÃ¡ relacionada
-	  * @param string $linkOn Nome do campo da entidade que serÃ¡ referenciada
+	  * @param string $class Nome da classe que será relacionada
+	  * @param string $linkOn Nome do campo da entidade que será referenciada
 	  * @param string $table Nome da tabela de relacionamentos many-to-many
-	  * @param string $column Nome da coluna da tabela mtm que referencia a chave primÃ¡ria da classe atual
+	  * @param string $column Nome da coluna da tabela mtm que referencia a chave primária da classe atual
 	  * @param boolean $lazy Carrega os valores dos relacionamentos assim que que carregado o valor atual da classe chamadora
+	  * @param boolean $colRef Coluna referencia da tabela pai
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
       */	
-	protected function _addForeignRelation($name, $type, $class, $linkOn, $table = null, $column = null, $lazy = false)
+	protected function _addForeignRelation($name, $type, $class, $linkOn, $table = null, $column = null, $lazy = false, $colRef = null)
 	{
 		if( ! isset($this->_foreign[ $name ]) )
 		{
@@ -2179,6 +2245,8 @@ class Lumine_Base extends Lumine_EventListener
 					$this->_foreign[ $name ]['class']   = $class;
 					$this->_foreign[ $name ]['linkOn']  = $linkOn;
 					$this->_foreign[ $name ]['lazy']    = $lazy;
+					/* @todo Adicionado, padronizar */
+					$this->_foreign[ $name ]['colRef'] = $colRef;
 					break;
 
 				case self::MANY_TO_MANY:
@@ -2188,29 +2256,30 @@ class Lumine_Base extends Lumine_EventListener
 					$this->_foreign[ $name ]['table']   = $table;
 					$this->_foreign[ $name ]['column']  = $column;
 					$this->_foreign[ $name ]['lazy']    = $lazy;
+					/* @todo Adicionado, padronizar */
+					$this->_foreign[ $name ]['colRef'] = $colRef;
 					break;
 				default:
-					throw new Lumine_Exception('Tipo nÃ£o suportado:'.$type, Lumine_Exception::ERROR);
+					throw new Lumine_Exception('Tipo não suportado:'.$type, Lumine_Exception::ERROR);
 			}
 		} else {
-			throw new Lumine_Exception('Uma classe nÃ£o pode conter campos duplicados ('.$name.').', Lumine_Exception::ERROR);
+			throw new Lumine_Exception('Uma classe não pode conter campos duplicados ('.$name.').', Lumine_Exception::ERROR);
 		}
 	}
 	
      /**
       * Recupera um relacionamento pelo nome da classe
       *
-      * @param $entityName Nome da entidade que serÃ¡ recuperada
+      * @param $entityName Nome da entidade que será recuperada
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return array DefiniÃ§Ã£o do relacionamento
+      * @return array Definição do relacionamento
       */	
 	protected function _getRelation( $entityName )
 	{
-		foreach($this->_definition as $name => $prop)
-		{
-			if( ! empty($prop['options']['foreign']) && ! empty($prop['options']['class']) && $prop['options']['class'] == $entityName )
-			{
+		
+		foreach($this->_definition as $name => $prop) {
+			if( !empty($prop['options']['foreign']) && ! empty($prop['options']['class']) && $prop['options']['class'] == $entityName ) {
 				$opt = $prop['options'];
 				$opt['name'] = $name;
 				$opt['type'] = self::MANY_TO_ONE;
@@ -2244,7 +2313,7 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
      /**
-      * Retorna a respresentaÃ§Ã£o de uniÃ£o de classes em string
+      * Retorna a respresentação de união de classes em string
       *
       * @param
       * @author Hugo Ferreira da Silva
@@ -2261,7 +2330,7 @@ class Lumine_Base extends Lumine_EventListener
       *
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return string String contendo as condiÃ§Ãµes montadas a partir dos campos
+      * @return string String contendo as condições montadas a partir dos campos
       */
 	protected function _makeWhereFromFields()
 	{
@@ -2291,11 +2360,11 @@ class Lumine_Base extends Lumine_EventListener
 	  * $total = $obj->count();
 	  * $total_distinct = $obj->count('distinct nome');
 	  * </code>
-      * @param boolean $forCount Define serÃ¡ uma consulta para contagem ou nÃ£o
-	  * @param string $what String contendo lÃ³gica para contagem
+      * @param boolean $forCount Define será uma consulta para contagem ou não
+	  * @param string $what String contendo lógica para contagem
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return int NÃºmero de registros encontrados
+      * @return int Número de registros encontrados
       */
 	protected function _prepareSQL($forCount = false, $what = '*')
 	{
@@ -2373,14 +2442,13 @@ class Lumine_Base extends Lumine_EventListener
 	}
 
      /**
-      * Prepara um SQL para inserÃ§Ã£o (INSERT)
+      * Prepara um SQL para inserção (INSERT)
       *
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
       * @return string String pronta para efetuar um INSERT
       */
-	protected function _insertSQL( $opt = null )
-	{
+	protected function _insertSQL( $opt = null ) {
 		$columns = array();
 		$values  = array();
 		$schema  = $this->_getConnection()->getOption('schema_name');
@@ -2393,15 +2461,15 @@ class Lumine_Base extends Lumine_EventListener
 		
 		reset($this->_definition);
 		
-		foreach($this->_definition as $name => $def)
-		{
-			if( array_key_exists($name, $this->_dataholder))
-			{
+		foreach($this->_definition as $name => $def) {
+			
+			if( array_key_exists($name, $this->_dataholder)) {
+				
 				$val = $this->getStrictValue( $name, $this->_dataholder[ $name ] );
+				
 				$columns[] = $def['column'];
 				
-				if( !is_a($val, self::BASE_CLASS) )
-				{
+				if( !is_a($val, self::BASE_CLASS) )	{
 					if($val === '' && !empty($empty_as_null))
 					{
 						$values[] = 'NULL';
@@ -2413,8 +2481,7 @@ class Lumine_Base extends Lumine_EventListener
 						$values[] = Lumine_Parser::getParsedValue($this, $this->_dataholder[ $name ], $def['type']);
 					}
 				} else {
-					//print_r($def);
-					$values[] = Lumine_Parser::getParsedValue($this, $val->$def['linkOn'], $def['type']);
+					$values[] = Lumine_Parser::getParsedValue($this, $val->$def['options']['linkOn'], $def['type']);
 				}
 				continue;
 			} 
@@ -2430,7 +2497,7 @@ class Lumine_Base extends Lumine_EventListener
 			if( !empty($def['options']['autoincrement']) )
 			{
 				$sequence_type = empty($def['option']['sequence_type']) ? '' : $def['option']['sequence_type'];
-				// se nÃ£o estiver definida na entidade, tenta pegar a padrÃ£o para todo o banco
+				// se não estiver definida na entidade, tenta pegar a padrão para todo o banco
 				$st = $this->_getConnection()->getOption('sequence_type');
 				if( !empty($st))
 				{
@@ -2448,8 +2515,8 @@ class Lumine_Base extends Lumine_EventListener
 					case Lumine_Sequence::NATURAL:
 					default:
 						// se for natural do banco
-						// nÃ£o faz nada, nem insere na lista de inserÃ§Ã£o
-						// o banco que se vire em pegar o padrÃ£o
+						// não faz nada, nem insere na lista de inserção
+						// o banco que se vire em pegar o padrão
 					break;
 				}
 				
@@ -2471,16 +2538,14 @@ class Lumine_Base extends Lumine_EventListener
 	}
 
      /**
-      * Prepara um SQL para atualizaÃ§Ã£o (UPDATE)
+      * Prepara um SQL para atualização (UPDATE)
       *
       * @param boolean $whereAddOnly Prepara o SQL somente com os parametros definidos com where
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-      * @return SQL montada para atualizaÃ§Ã£o
+      * @return SQL montada para atualização
       */
-	protected function _updateSQL( $whereAddOnly = false )
-	{
-
+	protected function _updateSQL( $whereAddOnly = false ) {
 		$fields = array();
 		$values = array();
 		$where  = array();
@@ -2492,18 +2557,13 @@ class Lumine_Base extends Lumine_EventListener
 		}
 		
 		reset($this->_definition);
-		
-		foreach($this->_definition as $name => $def)
-		{
-			if( array_key_exists($name, $this->_dataholder))
-			{
-			    
+		foreach($this->_definition as $name => $def) {
+			if( array_key_exists($name, $this->_dataholder)) {
 				$valor = $this->_dataholder[ $name ]; 			// pega o valor da linha
 				
 				// se este campo existir no DataHolder original e o valor for o mesmo
-				if( isset($this->_original_dataholder[ $name ]) && $this->_original_dataholder[ $name ] == $valor )
-				{
-					// nÃ£o coloca na lista de atualizaÃ§Ã£o
+				if( isset($this->_original_dataholder[ $name ]) && $this->_original_dataholder[ $name ] == $valor )	{
+					// não coloca na lista de atualização
 					continue;
 				}
 				
@@ -2511,13 +2571,10 @@ class Lumine_Base extends Lumine_EventListener
 				// $values[] = Lumine_Parser::getParsedValue($this, $this->_dataholder[ $name ], $def['type']);
 				$val = $this->getStrictValue( $name, $this->_dataholder[ $name ] );
 				$columns[] = $def['column'];
-				
-				if( !is_a($val, self::BASE_CLASS) )
-				{
-					if($val === '' && !empty($empty_as_null))
-					{
-						$values[] = 'NULL';
+				if( !is_a($val, self::BASE_CLASS) )	{
+					if($val === '' && !empty($empty_as_null)) {
 						
+						$values[] = 'NULL';
 					} else if($val === null) {
 						$values[] = 'NULL';
 						
@@ -2525,57 +2582,43 @@ class Lumine_Base extends Lumine_EventListener
 						$values[] = Lumine_Parser::getParsedValue($this, $this->_dataholder[ $name ], $def['type']);
 					}
 				} else {
-					$values[] = Lumine_Parser::getParsedValue($this, $val->$def['linkOn'], $def['type']);
+					$values[] = Lumine_Parser::getParsedValue($this, $val->$def['options']['linkOn'], $def['type']);
 				}
 				
 				continue;
 			}
 		}
-		
-		if( empty($values) )
-		{
-			Lumine_Log::warning('NÃ£o foram encontradas alteraÃ§Ãµes para realizar o udpate');
+		if( empty($values) ) {
+			Lumine_Log::warning('Não foram encontradas alterações para realizar o udpate');
 			return false;
 		}
 		
 		$where_str = '';
-		
-		if( $whereAddOnly == true )
-		{
+		if( $whereAddOnly == true ) {
 			$where_str = Lumine_Parser::parseSQLValues($this, implode(' AND ', $this->_where));
 		} else {
 			$pks = $this->_getPrimaryKeys();
-			
-			foreach($pks as $id => $def)
-			{
+			foreach($pks as $id => $def) {
 				$name = $def['name'];
-				
-				if( !empty($this->_dataholder[ $name ]))
-				{
+				if( !empty($this->_dataholder[ $name ])) {
 					$where[] = $a . $def['column'] . ' = ' . Lumine_Parser::getParsedValue($this, $this->_dataholder[ $name ], $def['type']);
 				}
 			}
 			
 			$where_str = implode(' AND ', $where);
 		}
-		
-		if( empty($where_str)) 
-		{
-			throw new Lumine_Exception('NÃ£o Ã© possÃ­vel atualizar sem definiÃ§Ã£o de chaves ou argumentos WHERE', Lumine_Exception::ERROR);
+		if( empty($where_str)) {
+			throw new Lumine_Exception('Não é possível atualizar sem definição de chaves ou argumentos WHERE', Lumine_Exception::ERROR);
 		}
-		
 		$table = $this->tablename();
 		$schema = $this->_getConfiguration()->getOption('schema_name');
-		if( !empty($schema))
-		{
+		if( !empty($schema)) {
 			$table = $schema.'.'.$table;
 		}
 
 		$sql = "UPDATE ".$table." " . $this->_getAlias() . " SET ";
 		$valores = array();
-		
-		for($i=0; $i<count($fields); $i++)
-		{
+		for($i=0; $i<count($fields); $i++) {
 			$valores[] = $fields[$i] .' = '. $values[$i];
 		}
 		
@@ -2627,7 +2670,7 @@ class Lumine_Base extends Lumine_EventListener
 		
 		if( empty($where_str)) 
 		{
-			throw new Lumine_Exception('NÃ£o Ã© possÃ­vel remover sem definiÃ§Ã£o de chaves ou argumentos WHERE', Lumine_Exception::ERROR);
+			throw new Lumine_Exception('Não é possível remover sem definição de chaves ou argumentos WHERE', Lumine_Exception::ERROR);
 		}
 
 		$table = $this->tablename();
@@ -2644,14 +2687,14 @@ class Lumine_Base extends Lumine_EventListener
 	}
 
     /**
-     * Salva os objetos determinantes para a inserÃ§Ã£o ou atualizaÃ§Ã£o do atual (Classe extendida)
+     * Salva os objetos determinantes para a inserção ou atualização do atual (Classe extendida)
      *
      * @author Hugo Ferreira da Silva
      * @link http://www.hufersil.com.br/lumine
      */
 	protected function savePendingObjects()
 	{
-		// faremos uma iteraÃ§Ã£o nos membros da classe,
+		// faremos uma iteração nos membros da classe,
 		// procurando itens que sejam chaves estrangeiras
 		// Menos MTM e OTM
 		
@@ -2666,6 +2709,7 @@ class Lumine_Base extends Lumine_EventListener
 
 			if( !empty($prop['options']['primary']) && !empty($prop['options']['foreign']) && !empty($prop['options']['class']) )
 			{
+				
 				Lumine_Log::debug('Classe pai: "' . $prop['options']['class'] . '"');
 				// verifica se esta classe extende a outra
 				$class = get_parent_class( $this );
@@ -2675,14 +2719,14 @@ class Lumine_Base extends Lumine_EventListener
 					Lumine_Log::debug('Instanciando classe: "' . $prop['options']['class'] . '"');
 					// instancia o objeto
 					$obj = new $prop['options']['class'];
-					// verifica se o objeto que estÃ¡ chamando tem o valor do objeto pai
+					// verifica se o objeto que está chamando tem o valor do objeto pai
 					$chave = $this->$name;
 					
 					// se tiver um valor
 					if( !is_null( $chave ) )
 					{
 
-						// dÃ¡ um GET primeiro
+						// dá um GET primeiro
 						$total = $obj->get( $chave );
 						
 						// pega os valores e coloca na classe
@@ -2691,7 +2735,7 @@ class Lumine_Base extends Lumine_EventListener
 						{
 							$obj->$chave = $valor;
 						}
-						// se nÃ£o encontrou
+						// se não encontrou
 						if( $total == 0 )
 						{
 							// insere
@@ -2700,10 +2744,11 @@ class Lumine_Base extends Lumine_EventListener
 							// atualiza
 							$obj->save();
 						}
+						
 						// coloca o valor no campo apropriado da classe chamadora
 						$this->$name = $obj->$prop['options']['linkOn'];
 						
-					} else { // se nÃ£o tiver um valor
+					} else { // se não tiver um valor
 						Lumine_Log::debug('Valor não encontrado para: "' . $obj->_getName(). '" com o nome de campo ' . $name . '-> '.$chave);
 
 						$list = $this->toArray();
@@ -2736,21 +2781,13 @@ class Lumine_Base extends Lumine_EventListener
 		{
 			$schema .= '.';
 		}
-		
-		foreach($this->_foreign as $name => $def)
-		{
-			switch($def['type'])
-			{
+		foreach($this->_foreign as $name => $def) {
+			switch($def['type']) {
 				case self::ONE_TO_MANY:
 					$list = $this->$name;
-					
-					if( !empty($list) && is_array($list))
-					{
-						foreach($list as $val)
-						{
-			
-							if(is_a($val, self::BASE_CLASS))
-							{
+					if( !empty($list) && is_array($list)) {
+						foreach($list as $val) {
+							if(is_a($val, self::BASE_CLASS)) {
 								$relname = $this->_getName();
 								
 								try {
@@ -2760,7 +2797,7 @@ class Lumine_Base extends Lumine_EventListener
 									$val->destroy();
 									unset($val);
 								} catch (Lumine_Exception $e) {
-									Lumine_log::warning('NÃ£o foi possÃ­vel encontrar o campo '.$relname.' em '.$val->_getName());
+									Lumine_log::warning('Não foi possível encontrar o campo '.$relname.' em '.$val->_getName());
 								}
 							}
 						}
@@ -2770,14 +2807,10 @@ class Lumine_Base extends Lumine_EventListener
 				
 				case self::MANY_TO_MANY:
 					$list = $this->$name;
-					
-					if( !empty($list) && is_array($list))
-					{
-						foreach($list as $val)
-						{
+					if( !empty($list) && is_array($list)) {
+						foreach($list as $val) {
 							// se for uma instancia de Lumine_Base
-							if(is_a($val, self::BASE_CLASS))
-							{
+							if(is_a($val, self::BASE_CLASS)) {
 								// pega o valor da chave primaria
 								$f1 = $this->_getField( $def['linkOn'] );
 								$v1 = $this->$def['linkOn'];
@@ -2791,17 +2824,16 @@ class Lumine_Base extends Lumine_EventListener
 								$f2 = $val->_getField( $rel['linkOn'] );
 								$v2 = $val->$f2['name'];
 								
-								// se ambos nÃ£o forem nulos
-								if( !is_null($v1) && !is_null($v2))
-								{
-									// verifica se jÃ¡ existe
+								// se ambos não forem nulos
+								if( !is_null($v1) && !is_null($v2)) {
+									// verifica se já existe
 									$sv1 = Lumine_Parser::getParsedValue($this, $v1, $f1['type']);
 									$sv2 = Lumine_Parser::getParsedValue($val, $v2, $f2['type']);
 									
 									$sql = "SELECT * FROM ".$schema.$def['table']. " WHERE ";
-									$sql .= $f1['column'].'='.$sv1;
+									$sql .= $def['column'].'='.$sv1;
 									$sql .= ' AND ';
-									$sql .= $f2['column'].'='.$sv2;
+									$sql .= $rel['column'].'='.$sv2;
 									
 									$clname = 'Lumine_Dialect_' . $this->_getConfiguration()->getProperty('dialect');
 									
@@ -2810,11 +2842,10 @@ class Lumine_Base extends Lumine_EventListener
 									$ponte->execute($sql);
 									
 									// se não existir
-									if($ponte->num_rows() == 0)
-									{
+									if($ponte->num_rows() == 0) {
 										// insert
 										$sql = "INSERT INTO " . $schema . $def['table'] . "(%s, %s) VALUES (%s, %s)";
-										$sql = sprintf($sql, $f1['column'], $f2['column'], $sv1, $sv2);
+										$sql = sprintf($sql, $def['column'], $rel['column'], $sv1, $sv2);
 										
 										$ponte->execute($sql);
 									}
@@ -2856,9 +2887,8 @@ class Lumine_Base extends Lumine_EventListener
 									$ponte->execute($sql);
 									$res = $ponte->num_rows();
 									
-									// se nÃ£o encontrou
-									if($res == 0)
-									{
+									// se não encontrou
+									if($res == 0) {
 										// insere
 										$sql = "INSERT INTO %s (%s,%s) VALUES (%s,%s)";
 										$sql = sprintf($sql, $schema . $def['table'], $campo['column'], $rel_def['column'], $valor_objeto, $valor_estrangeiro);
@@ -2869,7 +2899,7 @@ class Lumine_Base extends Lumine_EventListener
 									$obj->destroy();
 									unset($obj);
 								} else {
-									Lumine_Log::warning('A o campo "'.$pks[0]['name'].' da classe "'.$this->_getName().'" nÃ£o possui um valor');
+									Lumine_Log::warning('A o campo "'.$pks[0]['name'].' da classe "'.$this->_getName().'" não possui um valor');
 								}
 							}
 						}
@@ -2884,7 +2914,7 @@ class Lumine_Base extends Lumine_EventListener
 	}
 
      /**
-      * Carrega os objetos que sÃ£o "preguiÃ§osos" (LAZY)
+      * Carrega os objetos que são "preguiçosos" (LAZY)
       *
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
@@ -2920,7 +2950,7 @@ class Lumine_Base extends Lumine_EventListener
 	}
 
 	//----------------------------------------------------------------------//
-	// MÃ©todos privados                                                     //
+	// Métodos privados                                                     //
 	//----------------------------------------------------------------------//
 	
 	private function __set( $key, $val )
@@ -3002,7 +3032,7 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
      /**
-      * Eftua a conexÃ£o com o banco de dados.
+      * Eftua a conexão com o banco de dados.
       *
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
@@ -3038,14 +3068,14 @@ class Lumine_Base extends Lumine_EventListener
 			
 			if( is_null($super) )
 			{
-				throw new Exception('Super-Classe nÃ£o encontrada para ' . $this->_getName());
+				throw new Exception('Super-Classe não encontrada para ' . $this->_getName());
 			}
 			
 			$field = $super->_getField( $key );
 //			return $super->
 			
 		} catch (Exception $e) {
-			throw new Exception('Campo nÃ£o encontrado');
+			throw new Exception('Campo não encontrado');
 		}
 	}
 	
@@ -3073,14 +3103,14 @@ class Lumine_Base extends Lumine_EventListener
 		// pesquisa as classes "pais"
 		for ($class = get_class($this); $class = get_parent_class ($class); $classes[] = $class)
 		{
-			// se nÃ£o for Lumine_Base
+			// se não for Lumine_Base
 			if( $class == 'Lumine_Base' )
 			{
-				// pÃ¡ra a iteraÃ§Ã£o
+				// pára a iteração
 				break;
 			}
 		}
-		// se nÃ£o encontrou nenhuma
+		// se não encontrou nenhuma
 		if( empty($classes) )
 		{
 			// sai da rotina
@@ -3102,13 +3132,14 @@ class Lumine_Base extends Lumine_EventListener
 		// percorre a lista de tras pra frente
 		for($i=count($lista_objetos)-1; $i>=0; $i--)
 		{
-			// se nÃ£o for o primeiro objeto, 
+			// se não for o primeiro objeto, 
 			if( isset($lista_objetos[ $i - 1 ]) )
 			{
 				// une com o objeto anterior
 				$lista_objetos[ $i - 1 ]->join( $lista_objetos[ $i ] );
 			}
 		}
+		
 	}
 }
 ?>

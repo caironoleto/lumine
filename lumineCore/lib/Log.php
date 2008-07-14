@@ -51,10 +51,10 @@ class Lumine_Log {
 				case self::BROWSER:
 					echo $msg;
 					break;
-			
+				
 				case self::FILE:
 					$msg = strip_tags($msg);
-				
+					
 					if( ! empty(self::$filename))
 					{
 						$fp = @fopen(self::$filename, 'a+');

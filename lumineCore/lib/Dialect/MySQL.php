@@ -6,7 +6,6 @@ Lumine::load('Dialect_IDialect');
 class Lumine_Dialect_MySQL extends Lumine_EventListener implements ILumine_Dialect
 {
 
-	private $connection = null;
 	private $result_set = null;
 	private $dataset    = array();
 	private $pointer    = 0;

@@ -31,7 +31,8 @@ class Lumine_ConnectionManager extends Lumine_EventListener
 	 */
 	public function create($connectionName, Lumine_Configuration $config)
 	{
-		if( $this->getConnection($connectionName) != false )
+		$connObj = $this->getConnection($connectionName);
+		if( $connObj != false )
 		{
 			Lumine_Log::warning('Já existe uma conexão com este nome: ' .$connectionName );
 		} else {
@@ -59,6 +60,7 @@ class Lumine_ConnectionManager extends Lumine_EventListener
 			$config->setConnection( $connObj );
 			$this->connections[ $connectionName ] = $config;
 		}
+		return $connObj;
 	}
 	
 	/**
@@ -77,6 +79,7 @@ class Lumine_ConnectionManager extends Lumine_EventListener
 		return $this->connections[ $connectionName ]->getConnection();
 	}
 	
+	//Carrega a classe do DIALETO
 	public function getConnectionClass( $dialect ) 
 	{
 		$file = LUMINE_INCLUDE_PATH . '/lib/Connection/'.$dialect.'.php';
