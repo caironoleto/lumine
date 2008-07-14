@@ -28,6 +28,8 @@ while($crianca->fetch()) {
 	echo 'Criança ID: ' .$crianca->id .'<br />';
 	echo '<strong>Memory Usage after getLink: ' .Lumine_Log::memoryUsage() .'</strong><br />';
 }
-
+$crianca->destroy();
+unset($crianca);
+echo '<strong>Memory Usage after destroy Crianca obj: ' .Lumine_Log::memoryUsage() .'</strong><br />';
 ?>
 </pre>
