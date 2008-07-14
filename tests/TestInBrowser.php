@@ -5,6 +5,9 @@ require_once('../config/config.php');
 
 Lumine::import('Brinquedo', 'Crianca');
 
+#Lumine_Log::setLevel(Lumine_Log::ERROR);
+#Lumine_Log::setOutput();
+
 for ($i = 1; $i <= 10000; $i++) {
 	echo '<strong>START</strong><br/>';
 	echo '<strong>Memory Usage before create Crianca obj: ' .Lumine_Log::memoryUsage() .'</strong><br />';
