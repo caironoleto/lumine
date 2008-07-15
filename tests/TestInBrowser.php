@@ -27,23 +27,23 @@ for ($i = 1; $i <= 10000; $i++) {
 		unset($value);
 	}
 	echo '<strong>Memory Usage after destroy Brinquedos obj: ' .Lumine_Log::memoryUsage() .'</strong><br />';
-	unset($brinquedos);
+	unset($crianca, $brinquedos);
 	echo '<strong>After save and destroy Crianca obj: ' .Lumine_Log::memoryUsage() .'</strong><br />';
 	echo '<strong>END</strong><br/><br/>';
 }
 echo '<strong>Memory Usage after foreach: ' .Lumine_Log::memoryUsage() .'</strong><br />';
-#echo '<strong>Memory Usage before create Crianca obj: ' .Lumine_Log::memoryUsage() .'</strong><br />';
-#$crianca = new Crianca;
-#$crianca->find();
-#while($crianca->fetch()) {
-#	echo '<strong>Memory Usage before getLink: ' .Lumine_Log::memoryUsage() .'</strong><br />';
-#	$brinquedos = $crianca->_getLink('brinquedos');
-#	unset($brinquedos);
-#	echo 'Criança ID: ' .$crianca->id .'<br />';
-#	echo '<strong>Memory Usage after getLink: ' .Lumine_Log::memoryUsage() .'</strong><br />';
-#}
-#$crianca->destroy();
-#unset($crianca);
-#echo '<strong>Memory Usage after destroy Crianca obj: ' .Lumine_Log::memoryUsage() .'</strong><br />';
+echo '<strong>Memory Usage before create Crianca obj: ' .Lumine_Log::memoryUsage() .'</strong><br />';
+//$crianca = new Crianca;
+//$crianca->find();
+//while($crianca->fetch()) {
+//	echo '<strong>Memory Usage before getLink: ' .Lumine_Log::memoryUsage() .'</strong><br />';
+//	$brinquedos = $crianca->_getLink('brinquedos');
+//	unset($brinquedos);
+//	echo 'Criança ID: ' .$crianca->id .'<br />';
+//	echo '<strong>Memory Usage after getLink: ' .Lumine_Log::memoryUsage() .'</strong><br />';
+//}
+//$crianca->destroy();
+//unset($crianca);
+//echo '<strong>Memory Usage after destroy Crianca obj: ' .Lumine_Log::memoryUsage() .'</strong><br />';
 ?>
 </pre>
