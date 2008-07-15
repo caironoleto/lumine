@@ -1098,7 +1098,7 @@ class Lumine_Base extends Lumine_EventListener
       */
 	public function group( $groupStr = null )
 	{
-		if( $groupStr != null )
+		if( $groupStr !== null )
 		{
 			$list = Lumine_Tokenizer::dataSelect( $groupStr, $this );
 			$this->_group = array_merge($this->_group, $list);
