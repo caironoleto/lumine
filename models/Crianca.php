@@ -7,7 +7,7 @@ class Crianca extends Lumine_Base {
 		$this->_addField("id", "id", "int", 11, array("primary" => true, "notnull" => true, "autoincrement" => true));
 		$this->_addField("nome", "nome", "varchar", 255, array("notnull" => false));
 		
-		$this->_addForeignRelation('brinquedos', self::ONE_TO_MANY, 'Brinquedo', 'crianca', null, null, null);
+		$this->_addForeignRelation('brinquedos', self::MANY_TO_MANY, 'Brinquedo', 'id', 'criancas_brinquedos_relation', 'id_crianca', null);
 	}
 }
 ?>
