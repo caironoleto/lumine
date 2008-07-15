@@ -407,7 +407,7 @@ class Lumine_Base extends Lumine_EventListener
       */
 	public function select( $data )
 	{
-		if( is_null($data) )
+		if( $data === null )
 		{
 			$this->_data = array();
 		} else {
@@ -468,7 +468,7 @@ class Lumine_Base extends Lumine_EventListener
       */	
 	public function from(Lumine_Base $obj = null, $alias = null)
 	{
-		if(is_null($obj))
+		if($obj === null)
 		{
 			$this->_from = array($this);
 		} else {
@@ -557,7 +557,7 @@ class Lumine_Base extends Lumine_EventListener
 		
 		// verifica as chaves daqui pra lá
 		$name = $obj->_getName();
-		if( is_null( $linkName ) )
+		if( $linkName === null )
 		{
 			Lumine_Log::debug('Nome do link não especificado. Tentando recuperar automaticamente de '.$name);
 			$opt = $this->_getRelation( $name );
@@ -579,7 +579,7 @@ class Lumine_Base extends Lumine_EventListener
 			$dest = $obj->_getField( $linkTo );								// pega o link de destino
 		}
 		
-		if( !is_null($extraCondition) )										// se a pessoa definiu uma condição extra
+		if( $extraCondition !== null )										// se a pessoa definiu uma condição extra
 		{
 			$args = func_get_args();
 			if( count($args) > 6 )
@@ -868,35 +868,28 @@ class Lumine_Base extends Lumine_EventListener
 		
 		$sql = $this->_getSQL( self::SQL_INSERT );
 		
-		if($sql === false)
-		{
+		if($sql === false) {
 			return false;
 		}
 		
 		$result = $this->_execute( $sql );
 		
-		// vejamos se inseriu
-		if($result == true)
-		{
-			// vamos analisar as chaves primarias e auto-incrementáveis
-			// para ver os valores e pegar do banco
-			$pks = $this->_getPrimaryKeys();
-			foreach($pks as $pk)
-			{
-				// se o valor for nulo e for um campo auto-increment
-				if( is_null($this->$pk['name']) && !empty($pk['options']['autoincrement']))
-				{
-					// pega o ultimo ID do campo
-					$valor = $this->_bridge->getLastId( $pk['column'] );
-					$this->$pk['name'] = $valor;
+//		Verifica se foi inserido e se o campo possui chave primária autoincrementavel.
+//		Se verdadeiro, armazena o último id da tabela
+		if($result == true) {
+			$primaryKeys = $this->_getPrimaryKeys();
+			foreach($primaryKeys as $primaryKey) {
+				$value = $this->$primaryKey['name'];
+				if( $value === null && isset($primaryKey['options']['autoincrement'])) {
+					$valor = $this->_bridge->getLastId( $primaryKey['column'] );
+					$this->$primaryKey['name'] = $valor;
 				}
 			}
-			
+
 			$this->saveDependentObjects();
 			$this->dispatchEvent('posInsert', $this);
 		}
-		
-		return $this;
+		return true;
 	}
 
      /**
@@ -912,36 +905,24 @@ class Lumine_Base extends Lumine_EventListener
 	{
 		$this->dispatchEvent('preSave', $this);
 		// para chamar o update, todas as chaves primarias tem que ter valor
-		$pks = $this->_getPrimaryKeys();
+		$primaryKeys = $this->_getPrimaryKeys();
 		$fks = $this->_getForeignRelations();
 		
 		$checkPrimaryKeys = true;
 		$checkForeignKeys = false;
-		// salva os objetos principais (classes extendidas)
-		$this->savePendingObjects();
 		
-		foreach($pks as $def) {
-			$prop = $this->$def['name'];
+		foreach($primaryKeys as $definicao) {
+			$prop = $this->$definicao['name'];
 			if(($prop == null) || (empty($prop)))	{
 				$checkPrimaryKeys = false;
 				break;
 			}
 		}
 
-		foreach ($fks as $key => $value) {
-			if($this->$key != null) {
-				$checkForeignKeys = true;
-				break;
-			}
-		}
-		
 		if ( $checkPrimaryKeys == true)
-			$this->update();
+			$this->update($whereAddOnly);
 		else
 			$this->insert();
-			
-		if ($checkForeignKeys == true)
-			$this->saveDependentObjects();
 			
 		return $this->affected_rows();
 	}
@@ -1097,7 +1078,7 @@ class Lumine_Base extends Lumine_EventListener
       */
 	public function order( $orderStr = null )
 	{
-		if(is_null($orderStr))
+		if($orderStr === null )
 		{
 			$this->_order = array();
 		} else {
@@ -1117,7 +1098,7 @@ class Lumine_Base extends Lumine_EventListener
       */
 	public function group( $groupStr = null )
 	{
-		if( !is_null($groupStr) )
+		if( $groupStr != null )
 		{
 			$list = Lumine_Tokenizer::dataSelect( $groupStr, $this );
 			$this->_group = array_merge($this->_group, $list);
@@ -1316,7 +1297,7 @@ class Lumine_Base extends Lumine_EventListener
 	 */
 	public function alias( $alias = null )
 	{
-		if( is_null($alias) )
+		if( $alias === null )
 		{
 			return $this->_alias;
 		}
@@ -1552,7 +1533,7 @@ class Lumine_Base extends Lumine_EventListener
 					$obj->limit($limits[0],$limits[1]);
 					$obj->order($orderBy);
 
-					$obj->$field['linkOn'] = !is_null($this->$field['colRef']) ?  $this->$field['colRef'] : $this->$ref['options']['linkOn'];
+					$obj->$field['linkOn'] = $this->$field['colRef'] !== null ?  $this->$field['colRef'] : $this->$ref['options']['linkOn'];
 					$obj->find();
 					
 					$newlist = array();
@@ -1588,7 +1569,7 @@ class Lumine_Base extends Lumine_EventListener
 							break;
 						}
 					}
-					if( is_null($campoEstrangeiro) == true )
+					if( $campoEstrangeiro === null )
 					{
 						throw new Exception("Deve haver relacionamento many-to-many em ambas as entidades");
 					}
@@ -1600,7 +1581,7 @@ class Lumine_Base extends Lumine_EventListener
 					$colunaWhere = $field['column'];
 					$tabelaUniao = $field['table'];
 					$tabelaLink = $list->tablename();
-					if( is_null($valor) )
+					if( $valor === null )
 					{
 //						throw new Exception("Sem valores no campo {$field['linkOn']}, logo é impossivel encontrar o relacionamento");
 						return array();
@@ -1729,12 +1710,12 @@ class Lumine_Base extends Lumine_EventListener
 								$list2[ $nk ] = $v;
 							}
 						}
+						$list[$newkey] = $list2;
+						unset($list2);
+					} else {
+						$list[ $newkey ] = $val;
 					}
-					$list[$newkey] = $list2;
-					unset($list2);
-				} else {
-					$list[ $newkey ] = $val;
-				}
+				} 
 			}
 		}
 		return $list;
@@ -2698,7 +2679,7 @@ class Lumine_Base extends Lumine_EventListener
 		// faremos uma iteração nos membros da classe,
 		// procurando itens que sejam chaves estrangeiras
 		// Menos MTM e OTM
-		
+
 		reset( $this->_definition );
 		
 		foreach( $this->_definition as $name => $prop )
@@ -2724,8 +2705,7 @@ class Lumine_Base extends Lumine_EventListener
 					$chave = $this->$name;
 					
 					// se tiver um valor
-					if( !is_null( $chave ) )
-					{
+					if( $chave !== null ) {
 
 						// dá um GET primeiro
 						$total = $obj->get( $chave );
@@ -2826,7 +2806,7 @@ class Lumine_Base extends Lumine_EventListener
 								$v2 = $val->$f2['name'];
 								
 								// se ambos não forem nulos
-								if( !is_null($v1) && !is_null($v2)) {
+								if( $v1 !== null && $v2 !== null) {
 									// verifica se já existe
 									$sv1 = Lumine_Parser::getParsedValue($this, $v1, $f1['type']);
 									$sv2 = Lumine_Parser::getParsedValue($val, $v2, $f2['type']);
@@ -2858,7 +2838,7 @@ class Lumine_Base extends Lumine_EventListener
 								$valor_pk = $this->$campo['name'];
 								
 								// se este objeto tem um valor no campo indicado
-								if( !is_null($valor_pk))
+								if( $valor_pk !== null)
 								{
 									// primeiro vemos se este valor já não existe
 									$sql = "SELECT * FROM " . $schema . $def['table'] . " WHERE ";
@@ -3067,7 +3047,7 @@ class Lumine_Base extends Lumine_EventListener
 		try {
 			$super = $this->_getParentClass();
 			
-			if( is_null($super) )
+			if( $super === null )
 			{
 				throw new Exception('Super-Classe não encontrada para ' . $this->_getName());
 			}

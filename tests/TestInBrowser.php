@@ -1,12 +1,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <pre>
 <?php
+ini_set('max_execution_time', 300);
 require_once('../config/config.php');
 
 Lumine::import('Brinquedo', 'Crianca');
 
-#Lumine_Log::setLevel(Lumine_Log::ERROR);
-#Lumine_Log::setOutput();
+//Lumine_Log::setLevel(Lumine_Log::ERROR);
+//Lumine_Log::setOutput();
 
 for ($i = 1; $i <= 10000; $i++) {
 	echo '<strong>START</strong><br/>';
@@ -26,7 +27,7 @@ for ($i = 1; $i <= 10000; $i++) {
 		unset($value);
 	}
 	echo '<strong>Memory Usage after destroy Brinquedos obj: ' .Lumine_Log::memoryUsage() .'</strong><br />';
-	unset($crianca, $brinquedos);
+	unset($brinquedos);
 	echo '<strong>After save and destroy Crianca obj: ' .Lumine_Log::memoryUsage() .'</strong><br />';
 	echo '<strong>END</strong><br/><br/>';
 }

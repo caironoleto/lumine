@@ -19,47 +19,41 @@ class Lumine_Log {
 	public static $output        = self::BROWSER;
 	public static $filename      = '';
 	
-	public static function log($code, $msg, $file, $line)
-	{
-		$tipo = 'DESCONHECIDO';
-		$cor = '';
+	public static function log($code, $msg, $file, $line) {
+		if(self::$level >= $code) {
+			$tipo = 'DESCONHECIDO';
+			$cor = '';
 
-		switch($code)
-		{
-			case self::LOG:
-				$tipo = 'LOG';
-				$cor = self::$LOG_COLOR;
-				break;
+			switch($code) {
+				case self::LOG:
+					$tipo = 'LOG';
+					$cor = self::$LOG_COLOR;
+					break;
 				
-			case self::WARNING:
-				$tipo = 'ALERTA';
-				$cor = self::$WARNING_COLOR;
-				break;
+				case self::WARNING:
+					$tipo = 'ALERTA';
+					$cor = self::$WARNING_COLOR;
+					break;
 				
-			case self::ERROR:
-				$tipo = 'ERRO';
-				$cor = self::$ERROR_COLOR;
-				break;
-		}
-		
-		if(self::$level >= $code)
-		{
+				case self::ERROR:
+					$tipo = 'ERRO';
+					$cor = self::$ERROR_COLOR;
+					break;
+			}
 			$data = date('d/m/Y H:i:s');
-			$msg = "<pre style=\"color:$cor\"><strong>$data - $tipo: </strong> $msg ($file, $line)</pre>".PHP_EOL;
-			switch(self::$output)
-			{
+			$memoryUsage = Lumine_Log::memoryUsage();
+			$msg = "<pre style=\"color:$cor\"><strong>$data - $tipo: </strong> $msg ($file, $line) - Memory Usage: $memoryUsage</pre>".PHP_EOL;
+			switch(self::$output) {
 				case self::BROWSER:
 					echo $msg;
 					break;
-				
+			
 				case self::FILE:
 					$msg = strip_tags($msg);
-					
-					if( ! empty(self::$filename))
-					{
+				
+					if( ! empty(self::$filename)) {
 						$fp = @fopen(self::$filename, 'a+');
-						if( $fp )
-						{
+						if( $fp ) {
 							fwrite($fp, $msg);
 							fclose($fp);
 						}

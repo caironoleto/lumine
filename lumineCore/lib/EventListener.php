@@ -39,10 +39,8 @@ class Lumine_EventListener
 		$this->_listeners[ $evt ] = array();
 	}
 	
-	protected function dispatchEvent( $evtName )
-	{
-		if( isset($this->_listeners[ $evtName ]) )
-		{
+	protected function dispatchEvent( $evtName ) {
+		if( isset($this->_listeners[ $evtName ]) ) {
 			$args = func_get_args();
 			array_shift($args);
 			
@@ -50,9 +48,11 @@ class Lumine_EventListener
 			{
 				call_user_func_array($callback, $args);
 			}
+			return true;
 		}
+		return false;
 	}
-	
+
 	function __destruct()
 	{
 	    unset($this->_listeners);
