@@ -923,7 +923,6 @@ class Lumine_Base extends Lumine_EventListener
 			$this->update($whereAddOnly);
 		else
 			$this->insert();
-			
 		return $this->affected_rows();
 	}
 	
@@ -2679,7 +2678,6 @@ class Lumine_Base extends Lumine_EventListener
 		// faremos uma iteração nos membros da classe,
 		// procurando itens que sejam chaves estrangeiras
 		// Menos MTM e OTM
-
 		reset( $this->_definition );
 		
 		foreach( $this->_definition as $name => $prop )
