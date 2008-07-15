@@ -1206,15 +1206,16 @@ class Lumine_Base extends Lumine_EventListener
 			$def['name'] = $name;
 			return $def;
 		}
-		
+
 		if( isset($this->_foreign[ $name ]) )
 		{
 			$def = $this->_foreign[ $name ];
 			$def['name'] = $name;
 			return $def;
 		}
-		
-		throw new Lumine_Exception('O campo '.$name.' não foi encontrado em '.$this->_getName(), Lumine_Exception::ERROR);
+
+		Lumine_Log::error('O campo '.$name.' não foi encontrado em '.$this->_getName());
+		return false;
 	}
 	
      /**
