@@ -193,6 +193,10 @@ class Lumine_Base extends Lumine_EventListener
 		$this->_joinSubClasses( $this );
 	}
 	
+	public function getObjId() {
+		return $this->objId;
+	}
+	
 	public function destroy() {
 		$this->__destruct();
 	}
@@ -215,7 +219,7 @@ class Lumine_Base extends Lumine_EventListener
 		{
 			unset($this->$key);
 		}
-		unset($this->_join_list, $this->_from, $list, $this->_bridge, $this->_alias, $this->_data, $this->_where, $this->_having, $this->_order, $this->_group, $this->_join, $this->_limit, $this->_offset, $this->_fetch_mode, $this->_dataholder, $this->_original_dataholder, $this->_multiInsertList, $this->_formatters, $this->_join_list, $this->_from, $this->_bridge, $this->_alia, $this->_data, $this->_where, $this->_having, $this->_order, $this->_group, $this->_join, $this->_limit, $this->_offset, $this->_fetch_mode, $this->_dataholder, $this->_original_dataholder, $this->_multiInsertList, $this->_formatters);
+		unset($this->_join_list, $this->_from, $list, $this->_bridge, $this->_alias, $this->_data, $this->_where, $this->_having, $this->_order, $this->_group, $this->_join, $this->_limit, $this->_offset, $this->_fetch_mode, $this->_dataholder, $this->_original_dataholder, $this->_multiInsertList, $this->_formatters);
 		parent::__destruct();
 	}
 
@@ -1649,23 +1653,16 @@ class Lumine_Base extends Lumine_EventListener
 	  * @param boolean $returnRealValues Força o retorno dos valores reais do banco
       * @return array Todos registros em um array
       */
-	public function allToArray( $returnRealValues = false )
-	{
+	public function allToArray( $returnRealValues = false ) {
 		$p = $this->_bridge->getPointer();
 		$this->_bridge->moveFirst();
 		
-		$dataholder = $this->_dataholder;
-		
 		$nova = array();
-		
-		while($this->fetch())
-		{
+		while($this->fetch()) {
 			$nova[] = $this->toArray('%s', $returnRealValues);
 		}
 		
-		
 		$this->_bridge->setPointer($p);
-		$this->_dataholder = $dataholder;
 		
 		return $nova;
 	}
@@ -1680,44 +1677,38 @@ class Lumine_Base extends Lumine_EventListener
       * @return array Array do registro atual
       */	
 	public function toArray( $format = '%s', $returnRealValues = false) {
-		$list = array();
+		$fields = $this->_getDefinition();
+		foreach (array_keys($fields) as $key) {
+			$list[$key] = $this->$key;
+		}
+		unset($fields);
 
-		if (count($this->_dataholder) > 0 ) { 
-			foreach($this->_dataholder as $key => $val) {
-				$newkey = sprintf($format, $key);
-				
-				$fld = $this->_getFieldByColumn( $key );
-	
-				if( !empty($fld)) {
-					$key = $fld['name'];
-				}
-				
-				if( $returnRealValues == true ) {
-					$val = $this->fieldValue( $key );
+		$fields = $this->_getForeignRelations();
+		foreach (array_keys($fields) as $key) {
+			if (!(isset($this->$key)) || empty($this->$key)) {
+				break;
+			} else {
+				$value = $this->$key;
+				if ($value instanceof Lumine_Base) {
+					$list[$key] = $value->toArray();
 				} else {
-					$val = $this->$key;
-				}
-				
-				if(is_a($val, self::BASE_CLASS)) {
-					$list[ $newkey ] = $val->toArray( $format );
-				} else {
-					if(is_array($val)) {
-						foreach($val as $k => $v) {
-							$nk = sprintf($format, $k);
-							if(is_a($v, self::BASE_CLASS)) {
-								$list2[ $nk ] = $v->toArray( $format );
+					if (is_array($value)) {
+						foreach ($value as $valor) {
+							if ($valor instanceof Lumine_Base) {
+								$tmpList[] = $valor->toArray();
 							} else {
-								$list2[ $nk ] = $v;
+								$tmpList[] = $valor;
 							}
+							$list[$key] = $tmpList;
+							unset($tmpList);
 						}
-						$list[$newkey] = $list2;
-						unset($list2);
 					} else {
-						$list[ $newkey ] = $val;
+						$list[$key] = $value;
 					}
-				} 
+				}
 			}
 		}
+		
 		return $list;
 	}
 	
@@ -2933,13 +2924,13 @@ class Lumine_Base extends Lumine_EventListener
 	// Métodos privados                                                     //
 	//----------------------------------------------------------------------//
 	
-	private function __set( $key, $val )
-	{
-		if( isset($this->_dataholder) )
-		{
-			$this->_dataholder[ $key ] = $val;
-		}
-	}
+//	private function __set( $key, $val )
+//	{
+//		if( isset($this->_dataholder) )
+//		{
+//			$this->_dataholder[ $key ] = $val;
+//		}
+//	}
 	
 	private function getStrictValue($key, $val)
 	{
@@ -3001,15 +2992,15 @@ class Lumine_Base extends Lumine_EventListener
 		}
 	}
 	
-	private function __get($key)
-	{
-		if( $this->_getConfiguration()->getOption('use_formatter_as_default') == true )
-		{
-			return $this->formattedValue( $key );
-		} else {
-			return $this->fieldValue( $key );
-		}
-	}
+//	private function __get($key)
+//	{
+//		if( $this->_getConfiguration()->getOption('use_formatter_as_default') == true )
+//		{
+//			return $this->formattedValue( $key );
+//		} else {
+//			return $this->fieldValue( $key );
+//		}
+//	}
 	
      /**
       * Eftua a conexão com o banco de dados.
