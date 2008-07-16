@@ -121,13 +121,16 @@ class Lumine_Configuration extends Lumine_EventListener
 	
 				if( ! class_exists($className) )
 				{
-					throw new Lumine_Exception('A classe '.$className.' não existe no arquivo '.$filename);
+					Lumine_Log::error('A classe '.$className.' não existe no arquivo '.$filename);
+					return false;
 				}
 				
 				Lumine_Log::debug('Classe carregada: '.$className);
 			} else {
-				throw new Lumine_Exception('Arquivo não encontrado: '.$filename, Lumine_Log::ERROR);
+				Lumine_Log::error('Arquivo não encontrado: '.$filename, Lumine_Log::ERROR);
+				return false;
 			}
+			return true;
 		}
 	}
 	
