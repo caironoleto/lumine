@@ -117,16 +117,6 @@ class Lumine_Base extends Lumine_EventListener
      */
 	protected $_fetch_mode     = self::FETCH_ASSOC;
 	
-    /**
-     * Armazena os dados da linha atual
-     */
-	protected $_dataholder     = array();
-	
-	/**
-	 * Armazena os dados originais da linha atual
-	 */
-	protected $_original_dataholder = array();
-	
 	/**
 	 * Formatadores de campos
 	 */
@@ -219,7 +209,7 @@ class Lumine_Base extends Lumine_EventListener
 		{
 			unset($this->$key);
 		}
-		unset($this->_join_list, $this->_from, $list, $this->_bridge, $this->_alias, $this->_data, $this->_where, $this->_having, $this->_order, $this->_group, $this->_join, $this->_limit, $this->_offset, $this->_fetch_mode, $this->_dataholder, $this->_original_dataholder, $this->_multiInsertList, $this->_formatters);
+		unset($this->_join_list, $this->_from, $list, $this->_bridge, $this->_alias, $this->_data, $this->_where, $this->_having, $this->_order, $this->_group, $this->_join, $this->_limit, $this->_offset, $this->_fetch_mode, $this->_multiInsertList, $this->_formatters);
 		parent::__destruct();
 	}
 
@@ -1760,10 +1750,6 @@ class Lumine_Base extends Lumine_EventListener
 		
 		// modo do resultado
 		$this->_fetch_mode     = self::FETCH_ASSOC;
-		
-		// armazena os valores das variaveis
-		$this->_dataholder     = array();
-		$this->_original_dataholder = array();
 		$this->_multiInsertList = array();
 		
 		$this->_formatters = array();
@@ -2413,22 +2399,21 @@ class Lumine_Base extends Lumine_EventListener
 		
 		foreach($this->_definition as $name => $def) {
 			
-			if( array_key_exists($name, $this->_dataholder)) {
+			if( isset($this->$name)) {
 				
-				$val = $this->getStrictValue( $name, $this->_dataholder[ $name ] );
+				$val = $this->getStrictValue($name, $this->$name);
 				
 				$columns[] = $def['column'];
 				
 				if( !is_a($val, self::BASE_CLASS) )	{
-					if($val === '' && !empty($empty_as_null))
-					{
+					if($val === '' && !empty($empty_as_null)) {
 						$values[] = 'NULL';
 						
 					} else if($val === null) {
 						$values[] = 'NULL';
 						
 					} else {
-						$values[] = Lumine_Parser::getParsedValue($this, $this->_dataholder[ $name ], $def['type']);
+						$values[] = Lumine_Parser::getParsedValue($this, $this->$name, $def['type']);
 					}
 				} else {
 					$values[] = Lumine_Parser::getParsedValue($this, $val->$def['options']['linkOn'], $def['type']);
@@ -2440,7 +2425,7 @@ class Lumine_Base extends Lumine_EventListener
 			{
 				$this->$name = $def['options']['default'];
 				$columns[] = $def['column'];
-				$values[]  = Lumine_Parser::getParsedValue($this, $this->_dataholder[ $name ], $def['type']);
+				$values[]  = Lumine_Parser::getParsedValue($this, $this->$name, $def['type']);
 				continue;
 			}
 			
@@ -2508,18 +2493,10 @@ class Lumine_Base extends Lumine_EventListener
 		
 		reset($this->_definition);
 		foreach($this->_definition as $name => $def) {
-			if( array_key_exists($name, $this->_dataholder)) {
-				$valor = $this->_dataholder[ $name ]; 			// pega o valor da linha
-				
-				// se este campo existir no DataHolder original e o valor for o mesmo
-				if( isset($this->_original_dataholder[ $name ]) && $this->_original_dataholder[ $name ] == $valor )	{
-					// não coloca na lista de atualização
-					continue;
-				}
-				
+			if( isset($this->$name)) {
+				$valor = $this->$name;
 				$fields[] = $a . $def['column'];
-				// $values[] = Lumine_Parser::getParsedValue($this, $this->_dataholder[ $name ], $def['type']);
-				$val = $this->getStrictValue( $name, $this->_dataholder[ $name ] );
+				$val = $this->getStrictValue( $name, $this->$name);
 				$columns[] = $def['column'];
 				if( !is_a($val, self::BASE_CLASS) )	{
 					if($val === '' && !empty($empty_as_null)) {
@@ -2529,7 +2506,7 @@ class Lumine_Base extends Lumine_EventListener
 						$values[] = 'NULL';
 						
 					} else {
-						$values[] = Lumine_Parser::getParsedValue($this, $this->_dataholder[ $name ], $def['type']);
+						$values[] = Lumine_Parser::getParsedValue($this, $this->$name, $def['type']);
 					}
 				} else {
 					$values[] = Lumine_Parser::getParsedValue($this, $val->$def['options']['linkOn'], $def['type']);
@@ -2550,8 +2527,8 @@ class Lumine_Base extends Lumine_EventListener
 			$pks = $this->_getPrimaryKeys();
 			foreach($pks as $id => $def) {
 				$name = $def['name'];
-				if( !empty($this->_dataholder[ $name ])) {
-					$where[] = $a . $def['column'] . ' = ' . Lumine_Parser::getParsedValue($this, $this->_dataholder[ $name ], $def['type']);
+				if( !empty($this->$name)) {
+					$where[] = $a . $def['column'] . ' = ' . Lumine_Parser::getParsedValue($this, $this->$name, $def['type']);
 				}
 			}
 			
@@ -2901,14 +2878,6 @@ class Lumine_Base extends Lumine_EventListener
 	// Métodos privados                                                     //
 	//----------------------------------------------------------------------//
 	
-//	private function __set( $key, $val )
-//	{
-//		if( isset($this->_dataholder) )
-//		{
-//			$this->_dataholder[ $key ] = $val;
-//		}
-//	}
-	
 	private function getStrictValue($key, $val)
 	{
 		try
@@ -2917,7 +2886,6 @@ class Lumine_Base extends Lumine_EventListener
 			
 			if(is_a($val, self::BASE_CLASS) || gettype($val) == 'NULL')
 			{
-				//$this->_dataholder[ $key ] = $val;
 				return $val;
 			}
 
@@ -2960,24 +2928,12 @@ class Lumine_Base extends Lumine_EventListener
 					break;
 			}
 
-			// $this->_dataholder[ $key ] = $val;
 			return $val;
 
 		} catch(Exception $e) {
-			// $this->_dataholder[ $key ] = $val;
 			return $val;
 		}
 	}
-	
-//	private function __get($key)
-//	{
-//		if( $this->_getConfiguration()->getOption('use_formatter_as_default') == true )
-//		{
-//			return $this->formattedValue( $key );
-//		} else {
-//			return $this->propertyValeu( $key );
-//		}
-//	}
 	
      /**
       * Eftua a conexão com o banco de dados.
