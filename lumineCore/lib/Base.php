@@ -303,35 +303,29 @@ class Lumine_Base extends Lumine_EventListener
 	
 	/**
 	 * Move o cursor para o próximo registro
-	 *
-	 * @param boolean $getLinks Recuperar automaticamente os links do tipo Lazy
 	 * @author Hugo Ferreira da Silva
-	 * @link http://www.hufersil.com.br/lumine Lumine - Mapeamento para banco de dados em PHP
+	 * @link http://www.hufersil.com.br/lumine
+	 * @author Cairo Noleto
+	 * @link http://www.caironoleto.com/
+	 * @param boolean $getLinks Recuperar automaticamente os links do tipo Lazy
 	 * @return boolean True se existir registros, do contrário false
-	 */	
-	public function fetch( $getLinks = true )
-	{
+	 **/	
+	public function fetch( $getLinks = true ) {
 		$result = $this->_bridge->fetch();
 		
-		if($result === false)
-		{
+		if ($result === false) {
 			return false;
 		}
-		$this->_dataholder = array();
-		$this->_original_dataholder = array();
 		
-		foreach($result as $key => $val)
-		{
+		foreach($result as $key => $val) {
 			$def = $this->_getFieldByColumn( $key );
-			if( !empty($def))
-			{
+			if( !empty($def)) {
 				$key = $def['name'];
 			}
 			$this->$key = $val;
-			$this->_original_dataholder[ $key ] = $val;
 		}
 		
-		$this->loadLazy(  );
+		$this->loadLazy();
 		
 		return true;
 	}
@@ -1646,37 +1640,37 @@ class Lumine_Base extends Lumine_EventListener
 	}
 	
      /**
-      * Recupera todos os registros em formato de array
-      * Cada linha do array representa uma linha de registro encontrado
+      * Recupera todos os objetos em formato de vetor
+      * Cada índice do vetor representa um objeto
+      *
       * @author Hugo Ferreira da Silva
       * @link http://www.hufersil.com.br/lumine
-	  * @param boolean $returnRealValues Força o retorno dos valores reais do banco
-      * @return array Todos registros em um array
-      */
-	public function allToArray( $returnRealValues = false ) {
-		$p = $this->_bridge->getPointer();
+      * @author Cairo Noleto
+      * @link http://www.caironoleto.com
+      * @return array Todos os objetos em um vetor
+      **/
+	public function allToArray() {
+		$pointer = $this->_bridge->getPointer();
 		$this->_bridge->moveFirst();
 		
-		$nova = array();
+		$list = array();
 		while($this->fetch()) {
-			$nova[] = $this->toArray('%s', $returnRealValues);
+			$list[] = $this->toArray();
 		}
 		
-		$this->_bridge->setPointer($p);
+		$this->_bridge->setPointer($pointer);
 		
-		return $nova;
+		return $list;
 	}
 	
      /**
-      * Converte o registro atual para um array
+      * Converte o objeto atual para um vetor
       *
-      * @author Hugo Ferreira da Silva
-	  * @param boolean $returnRealValues Força o retorno dos valores reais do banco
-	  * @param String $format Formato do nome do campo para ser utilizado com sprintf
-      * @link http://www.hufersil.com.br/lumine
-      * @return array Array do registro atual
+      * @author Cairo Noleto
+      * @link http://www.caironoleto.com
+      * @return array Vetor do objeto atual
       */	
-	public function toArray( $format = '%s', $returnRealValues = false) {
+	public function toArray() {
 		$fields = $this->_getDefinition();
 		foreach (array_keys($fields) as $key) {
 			$list[$key] = $this->$key;
@@ -1708,7 +1702,7 @@ class Lumine_Base extends Lumine_EventListener
 				}
 			}
 		}
-		
+		unset($fields);
 		return $list;
 	}
 	
@@ -1897,58 +1891,41 @@ class Lumine_Base extends Lumine_EventListener
 	
 	/**
 	 * Recupera o valor real do campo (sem formatar)
-	 */
-	public function fieldValue( $key )
-	{
-		try
-		{
-			if( !isset($this->_dataholder[ $key ]) )
-			{
-				return null;
-			}
-			
-			if( gettype($this->_dataholder[ $key ]) == 'NULL')
-			{
-				return null;
-			}
-			
-			$res = $this->_getField($key);
-			if( ! empty($res['options']['format']) )
-			{
-				switch( $res['type'] )
-				{
-					case 'int':
-					case 'integer':
-					case 'float':
-					case 'double':
-						return sprintf( $res['options']['format'], $this->_dataholder[ $key ]);
-						break;
-
-					case 'date':
-					case 'datetime':
-						return strftime($res['options']['format'], strtotime($this->_dataholder[ $key ]));
-						break;
-				}
-			}
-			
-			if( !empty( $res['options']['formatter'] ) )
-			{
-				return call_user_func_array( $res['options']['formatter'], array($this->_dataholder[ $key ]) );
-			}
-			
-			return $this->_dataholder[ $key ];
-			
-		} catch (Exception $e) {
-			// Lumine_Log::warning( 'Campo não encontrado: '.$key);
-			
-			// se encontrar, retorna o que encontrou
-			if( isset($this->_dataholder[ $key ]))
-			{
-				return $this->_dataholder[ $key ];
-			}
-				
+	 *
+	 * @author Hugo Ferreira
+	 * @link http://www.hufersil.com.br/
+	 * @author Cairo Noleto
+	 * @link http://www.caironoleto.com/
+	 * @param $key Propriedade a ser devolvida
+	 * @return Value in property
+	 **/
+	public function propertyValue( $key ) {
+		if( (!isset($this->$key) || (empty($this->key))) {
 			return null;
 		}
+
+		$field = $this->_getField($key);
+		if( ! empty($field['options']['format']) ) {
+			switch( $field['type'] ) {
+				case 'int':
+				case 'integer':
+				case 'float':
+				case 'double':
+					return sprintf( $field['options']['format'], $this->$key);
+					break;
+
+				case 'date':
+				case 'datetime':
+					return strftime($field['options']['format'], strtotime($this->$key));
+					break;
+			}
+		}
+
+		if( !empty( $field['options']['formatter'] ) ) {
+			return call_user_func_array( $field['options']['formatter'], array($this->$key) );
+		}
+
+		return $this->$key;
 	}
 	
 	//////////////////////////////////////////////////////////////////
@@ -2998,7 +2975,7 @@ class Lumine_Base extends Lumine_EventListener
 //		{
 //			return $this->formattedValue( $key );
 //		} else {
-//			return $this->fieldValue( $key );
+//			return $this->propertyValeu( $key );
 //		}
 //	}
 	
