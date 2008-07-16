@@ -35,7 +35,8 @@ abstract class Lumine
 	 * Importa arquivos
 	 *
 	 * @author Hugo Ferreira da Silva
-	 * @return void
+	 * @author Cairo Noleto
+	 * @return boolean
 	 */
 	public static function import()
 	{
@@ -43,19 +44,20 @@ abstract class Lumine
 		$cn = Lumine_ConnectionManager::getInstance();
 		$list = $cn->getConfigurationList();
 
-		$cfg = array_shift( $list );
-		$pacote = $cfg->getProperty('package');
-		
-		if( !empty($pacote) )
-		{
-			$pacote .= '.';
+		foreach ($list as $cfg) {
+			$pacotes[] = $cfg->getProperty('package');
 		}
 		
-		foreach($args as $classname)
-		{
+		echo $libname;
+		
+		foreach($args as $classname) {
 			$newfile = $basedir . str_replace('.', DIRECTORY_SEPARATOR, $libname). '.php';
-			Lumine_Util::Import( $pacote . $classname );
+			foreach ($pacotes as $pacote) {
+				Lumine_Util::Import( $pacote .'.' . $classname );
+			}
+			return true;
 		}
+		return false;
 	}
 	
 	/**
