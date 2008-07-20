@@ -868,7 +868,7 @@ class Lumine_Base extends Lumine_EventListener
 			$primaryKeys = $this->_getPrimaryKeys();
 			foreach($primaryKeys as $primaryKey) {
 				$value = $this->$primaryKey['name'];
-				if( $value === null && isset($primaryKey['options']['autoincrement'])) {
+				if( isset($primaryKey['options']['autoincrement'])) {
 					$valor = $this->_bridge->getLastId( $primaryKey['column'] );
 					$this->$primaryKey['name'] = $valor;
 				}
@@ -2774,7 +2774,10 @@ class Lumine_Base extends Lumine_EventListener
 										
 										$ponte->execute($sql);
 									}
+									unset($ponte);
 								}
+								$val->destroy();
+								unset($val);
 							} else {
 								// pega o valor do campo desta classe
 								$campo = $this->_getField($def['linkOn']);
@@ -2822,17 +2825,15 @@ class Lumine_Base extends Lumine_EventListener
 										$ponte->execute($sql);
 									}
 									$obj->destroy();
-									unset($obj);
+									unset($obj, $ponte);
 								} else {
 									Lumine_Log::warning('A o campo "'.$pks[0]['name'].' da classe "'.$this->_getName().'" não possui um valor');
 								}
 							}
 						}
 					}
+
 					
-					$val->destroy();
-					$ponte->destroy();
-					unset($val, $ponte);
 				break;
 			}
 		}
